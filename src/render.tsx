@@ -3,8 +3,10 @@ import { createRoot } from 'react-dom/client';
 
 import { SVGMassFragmentation } from './components/SVGMassFragmentation';
 
-export function render(tree, options) {
-  const element = <SVGMassFragmentation tree={tree} {...options} />;
+export function render(sequence, info, options) {
+  const element = (
+    <SVGMassFragmentation sequence={sequence} info={info} {...options} />
+  );
   const div = document.createElement('div');
   const root = createRoot(div);
   flushSync(() => {
