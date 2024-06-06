@@ -1,3 +1,37 @@
+export function processResults(data) {
+  let results = data.results;
+  let newResults = {
+    fragment: [],
+    break: [],
+  };
+  while (results.length > 0) {
+    let r = results.pop();
+    const index =
+      'position' in r
+        ? newResults.break.findIndex((element) => element.type === r.type)
+        : newResults.fragment.findIndex((element) => element.type === r.type);
+    if (index === -1) {
+      const charge = [r.charge];
+      const similarity = [r.similarity];
+      const textColor = [r.textColor];
+      r.charge = charge;
+      r.similarity = similarity;
+      r.textColor = textColor;
+      if ('position' in r) newResults.break.push(r);
+      else newResults.fragment.push(r);
+    } else if ('position' in r) {
+      newResults.break[index].charge.push(r.charge);
+      newResults.break[index].similarity.push(r.similarity);
+      newResults.break[index].textColor.push(r.textColor);
+    } else {
+      newResults.fragment[index].charge.push(r.charge);
+      newResults.fragment[index].similarity.push(r.similarity);
+      newResults.fragment[index].textColor.push(r.textColor);
+    }
+  }
+  data.results = newResults;
+}
+
 export function appendResults(data, analysisResult, options = {}) {
   const numberResidues = data.residues.residues.length;
   const { merge = {}, filter = {} } = options;

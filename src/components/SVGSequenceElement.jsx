@@ -1,5 +1,11 @@
-export function SVGSequenceElement({ element, index }) {
-  const x = String(10 + index * 30);
+export function SVGSequenceElement({ element, index, options }) {
+  const {
+    leftRightBorders = 50,
+    spaceBetweenResidues = 30,
+    labelFontFamily = 'Verdana',
+    labelSize = 8,
+  } = options;
+  const x = String(leftRightBorders + index * spaceBetweenResidues);
   const y = '69';
   let color = '#555555';
   if (element.replaced) {
@@ -9,8 +15,8 @@ export function SVGSequenceElement({ element, index }) {
   }
   return (
     <text
-      fontFamily="Verdana"
-      fontSize="12"
+      fontFamily={labelFontFamily}
+      fontSize={String(labelSize)}
       fontWeight="bold"
       fill={color}
       x={x}

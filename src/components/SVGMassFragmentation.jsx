@@ -1,12 +1,12 @@
 import { appendResidues } from '../appendResidues.js';
-import { appendResults } from '../appendResults.js';
+import { appendResults, processResults } from '../appendResults.js';
 
 import { SVGSequence } from './SVGSequence.jsx';
-import { SVGSequenceElement } from './SVGSequenceElement.jsx';
+import { SVGSequenceBreak } from './SVGSequenceBreak.jsx';
 
 const options = {
-  width: 600,
-  leftRightBorders: 50,
+  width: 1400,
+  leftRightBorders: 10,
   spaceBetweenResidues: 20,
   spaceBetweenInternalLines: 10,
   parsing: {
@@ -38,23 +38,34 @@ const info = [
   { type: 'c38', similarity: 0.5044, charge: 2 },
 ];
 
+export function initMassFragmentationData(
+  sequence,
+  analysisResults,
+  options = {},
+) {
+  const { parsing, merge, filter } = options;
+  const data = {};
+  appendResidues(data, sequence, parsing);
+  appendResults(data, analysisResults, { merge, filter });
+  processResults(data);
+  console.log(data);
+  return data;
+}
+
 export function SVGMassFragmentation() {
   const svgSize = {
     width: 1400,
     height: 500,
   };
-  const data = {};
-  appendResidues(data, sequence, options.parsing);
+  const data = initMassFragmentationData(sequence, info, options);
   console.log(data);
-  appendResults(data, info);
-  console.log(data);
-
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox={`0 0 ${svgSize.width} ${svgSize.height}`}
+      viewBox={`0 0 ${options.width} ${svgSize.height}`}
     >
-      <SVGSequence sequence={sequence} parsing={options.parsing} />
+      <SVGSequence sequence={data} options={options} />
+      <SVGSequenceBreak breaks={data.results.break} options={options} />
     </svg>
   );
 }
