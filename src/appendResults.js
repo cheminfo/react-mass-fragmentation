@@ -1,4 +1,4 @@
-export function processResults(data) {
+export function sortResults(data) {
   let results = data.results;
   let newResults = {
     fragment: [],
@@ -6,27 +6,24 @@ export function processResults(data) {
   };
   while (results.length > 0) {
     let r = results.pop();
-    const index =
+    const type = 'position' in r ? 'break' : 'fragment';
+    const index = newResults[type].findIndex((element) =>
       'position' in r
-        ? newResults.break.findIndex((element) => element.type === r.type)
-        : newResults.fragment.findIndex((element) => element.type === r.type);
+        ? element.position === r.position &&
+          (element.fromBegin === r.fromBegin || element.fromEnd === r.fromEnd)
+        : element.from === r.from && element.to === r.to,
+    );
     if (index === -1) {
-      const charge = [r.charge];
-      const similarity = [r.similarity];
-      const textColor = [r.textColor];
-      r.charge = charge;
-      r.similarity = similarity;
-      r.textColor = textColor;
-      if ('position' in r) newResults.break.push(r);
-      else newResults.fragment.push(r);
-    } else if ('position' in r) {
-      newResults.break[index].charge.push(r.charge);
-      newResults.break[index].similarity.push(r.similarity);
-      newResults.break[index].textColor.push(r.textColor);
+      r.type = [r.type];
+      r.charge = [r.charge];
+      r.similarity = [r.similarity];
+      r.textColor = [r.textColor];
+      newResults[type].push(r);
     } else {
-      newResults.fragment[index].charge.push(r.charge);
-      newResults.fragment[index].similarity.push(r.similarity);
-      newResults.fragment[index].textColor.push(r.textColor);
+      newResults[type][index].type.push(r.type);
+      newResults[type][index].charge.push(r.charge);
+      newResults[type][index].similarity.push(r.similarity);
+      newResults[type][index].textColor.push(r.textColor);
     }
   }
   data.results = newResults;

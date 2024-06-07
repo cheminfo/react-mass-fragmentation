@@ -1,5 +1,5 @@
 import { appendResidues } from '../appendResidues.js';
-import { appendResults, processResults } from '../appendResults.js';
+import { appendResults, sortResults } from '../appendResults.js';
 
 import { SVGSequence } from './SVGSequence.jsx';
 import { SVGSequenceBreak } from './SVGSequenceBreak.jsx';
@@ -10,14 +10,13 @@ function initMassFragmentationData(sequence, analysisResults, options = {}) {
   appendResidues(data, sequence, parsing);
   appendResults(data, analysisResults, { merge, filter });
   console.log(data);
-  processResults(data);
+  sortResults(data);
   console.log(data);
   return data;
 }
 
 export function SVGMassFragmentation({ sequence, analysisInfo, options }) {
   const data = initMassFragmentationData(sequence, analysisInfo, options);
-  // console.log(data);
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

@@ -4,7 +4,7 @@ export function SVGSequenceBreakFromBegin({ sequenceBreak, options }) {
     spaceBetweenResidues = 30,
     strokeWidth = 2,
   } = options;
-  const xStart = leftRightBorders + 1.5 * spaceBetweenResidues;
+  const xStart = leftRightBorders + 1.6 * spaceBetweenResidues;
   const x = xStart + sequenceBreak.position * spaceBetweenResidues;
   const y = '69';
   return (
