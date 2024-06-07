@@ -7,12 +7,20 @@ export function SVGSequenceBreak({ breaks, options }) {
       {breaks
         .filter((b) => b.fromBegin)
         .map((b) => (
-          <SVGSequenceBreakFromBegin sequenceBreak={b} options={options} />
+          <SVGSequenceBreakFromBegin
+            sequenceBreak={b}
+            options={options}
+            key={b.type}
+          />
         ))}
       {breaks
         .filter((b) => b.fromEnd)
         .map((b) => (
-          <SVGSequenceBreakFromEnd sequenceBreak={b} options={options} />
+          <SVGSequenceBreakFromEnd
+            sequenceBreak={b}
+            options={options}
+            key={b.type}
+          />
         ))}
     </>
   );

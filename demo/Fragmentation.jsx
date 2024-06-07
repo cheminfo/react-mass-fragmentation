@@ -1,6 +1,6 @@
 import { SVGMassFragmentation } from '../src/components/SVGMassFragmentation';
 
-export default function Fragmentation() {
+export default function Fragmentation({ sequence, analysisInfo, options }) {
   return (
     <>
       <h1>Fragmentation</h1>
@@ -10,7 +10,11 @@ export default function Fragmentation() {
           overflow: 'clip',
         }}
       >
-        <SVGMassFragmentation />
+        <SVGMassFragmentation
+          sequence={sequence}
+          analysisInfo={analysisInfo}
+          options={options}
+        />
       </div>
     </>
   );
