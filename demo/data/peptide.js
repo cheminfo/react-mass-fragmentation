@@ -24,7 +24,7 @@ const analysisInfo = [
 
 const options = {
   width: 900,
-  height: 100,
+  height: 200,
   leftRightBorders: 10,
   spaceBetweenResidues: 20,
   spaceBetweenInternalLines: 10,

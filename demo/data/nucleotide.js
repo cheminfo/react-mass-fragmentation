@@ -49,7 +49,7 @@ let analysisInfo = [
 
 let options = {
   width: 300,
-  height: 100,
+  height: 200,
   leftRightBorders: 50,
   spaceBetweenResidues: 20,
   spaceBetweenInternalLines: 10,
