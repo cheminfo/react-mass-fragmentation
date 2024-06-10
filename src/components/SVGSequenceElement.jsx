@@ -3,7 +3,7 @@ export function SVGSequenceElement({ element, index, options }) {
     leftRightBorders = 50,
     spaceBetweenResidues = 30,
     labelFontFamily = 'Verdana',
-    labelSize = 8,
+    labelSize = 12,
   } = options;
   const x = String(leftRightBorders + index * spaceBetweenResidues);
   const y = '69';

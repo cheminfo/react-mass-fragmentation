@@ -1,10 +1,19 @@
-export function SVGSequenceBreakLabel({ x, y, label, charge, similarity }) {
+export function SVGSequenceBreakLabel({
+  x,
+  y,
+  label,
+  charge,
+  similarity,
+  options,
+}) {
+  const { labelFontFamily = 'Verdana', labelSize = 12 } = options;
+  const fontSize = String((2 * Number(labelSize)) / 3);
   return (
     <>
       <text
         fill="#999999"
-        fontFamily="verdana"
-        fontSize="8"
+        fontFamily={labelFontFamily}
+        fontSize={fontSize}
         fontWeight="bold"
         textAnchor="end"
         svgjs:data="{'leading':'1.3'}"
@@ -15,8 +24,8 @@ export function SVGSequenceBreakLabel({ x, y, label, charge, similarity }) {
       </text>
       <text
         fill="#999999"
-        fontFamily="verdana"
-        fontSize="4"
+        fontFamily={labelFontFamily}
+        fontSize={String(Number(fontSize) / 2)}
         svgjs:data="{'leading':'1.3'}"
         x={x}
         y={String(Number(y) - 4)}
@@ -25,8 +34,8 @@ export function SVGSequenceBreakLabel({ x, y, label, charge, similarity }) {
       </text>
       <text
         fill="#999999"
-        fontFamily="verdana"
-        fontSize="4"
+        fontFamily={labelFontFamily}
+        fontSize={String(Number(fontSize) / 2)}
         svgjs:data="{'leading':'1.3'}"
         x={x}
         y={y}
