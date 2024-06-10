@@ -9,7 +9,7 @@ function initMassFragmentationData(sequence, analysisResults, options = {}) {
   const data = {};
   appendResidues(data, sequence, parsing);
   appendResults(data, analysisResults, { merge, filter });
-  console.log(data);
+  // console.log(data);
   sortResults(data);
   console.log(data);
   return data;

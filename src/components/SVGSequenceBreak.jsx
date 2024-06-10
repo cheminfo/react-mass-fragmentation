@@ -1,5 +1,6 @@
 import { SVGSequenceBreakFromBegin } from './SVGSequenceBreakFromBegin';
 import { SVGSequenceBreakFromEnd } from './SVGSequenceBreakFromEnd';
+import { SVGSequenceBreakLabel } from './SVGSequenceBreakLabel';
 
 export function SVGSequenceBreak({ breaks, options }) {
   return (

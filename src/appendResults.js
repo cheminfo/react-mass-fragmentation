@@ -6,24 +6,26 @@ export function sortResults(data) {
   };
   while (results.length > 0) {
     let r = results.pop();
-    const type = 'position' in r ? 'break' : 'fragment';
-    const index = newResults[type].findIndex((element) =>
+    const resultType = 'position' in r ? 'break' : 'fragment';
+    const index = newResults[resultType].findIndex((element) =>
       'position' in r
         ? element.position === r.position &&
           (element.fromBegin === r.fromBegin || element.fromEnd === r.fromEnd)
         : element.from === r.from && element.to === r.to,
     );
+    r.members = [
+      {
+        type: r.type,
+        charge: r.charge,
+        similarity: r.similarity,
+        textColor: r.textColor,
+      },
+    ];
+    const { type, charge, similarity, textColor, ...rslt } = r;
     if (index === -1) {
-      r.type = [r.type];
-      r.charge = [r.charge];
-      r.similarity = [r.similarity];
-      r.textColor = [r.textColor];
-      newResults[type].push(r);
+      newResults[resultType].push(rslt);
     } else {
-      newResults[type][index].type.push(r.type);
-      newResults[type][index].charge.push(r.charge);
-      newResults[type][index].similarity.push(r.similarity);
-      newResults[type][index].textColor.push(r.textColor);
+      newResults[resultType][index].members.push(rslt.members[0]);
     }
   }
   data.results = newResults;
