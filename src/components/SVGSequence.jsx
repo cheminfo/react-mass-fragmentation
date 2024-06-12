@@ -1,11 +1,12 @@
 import { SVGSequenceElement } from './SVGSequenceElement';
 
-export function SVGSequence({ sequence, options }) {
+export function SVGSequence({ sequence, y, options }) {
   return (
     <>
-      {sequence.residues.all.map((e, index) => (
+      {sequence.map((e, index) => (
         <SVGSequenceElement
           element={e}
+          y={y}
           index={index}
           options={options}
           key={`residue-${index}`}

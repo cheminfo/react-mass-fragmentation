@@ -1,16 +1,20 @@
 import { SVGSequenceBreakLabel } from './SVGSequenceBreakLabel';
 
-export function SVGSequenceBreakFromEnd({ sequenceBreak, options }) {
+export function SVGSequenceBreakFromEnd({
+  sequenceBreak,
+  indexOnLine,
+  y,
+  options,
+}) {
   const {
     leftRightBorders = 50,
     spaceBetweenResidues = 30,
+    spaceBetweenInternalLines = 12,
     strokeWidth = 2,
-    labelSize = 12,
+    labelSize = 8,
   } = options;
-  const xStart = leftRightBorders + 1.7 * spaceBetweenResidues;
-  const x = xStart + sequenceBreak.position * spaceBetweenResidues;
-  const y = '69';
-  const fontSizeLabel = (2 * labelSize) / 3;
+  const xStart = leftRightBorders + 1.5 * spaceBetweenResidues + strokeWidth;
+  const x = xStart + indexOnLine * spaceBetweenResidues;
   return (
     <>
       <line
@@ -34,7 +38,7 @@ export function SVGSequenceBreakFromEnd({ sequenceBreak, options }) {
       {sequenceBreak.members.map((m, index) => (
         <SVGSequenceBreakLabel
           x={x}
-          y={String(Number(y) - 15 - index * fontSizeLabel)}
+          y={String(Number(y) - 15 - index * labelSize)}
           label={m.type}
           charge={m.charge}
           similarity={Math.trunc(m.similarity * 100)}

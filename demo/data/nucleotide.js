@@ -48,11 +48,10 @@ let analysisInfo = [
 ];
 
 let options = {
-  width: 300,
-  height: 200,
+  width: 200,
   leftRightBorders: 50,
   spaceBetweenResidues: 20,
-  spaceBetweenInternalLines: 10,
+  spaceBetweenInternalLines: 12,
   parsing: {
     kind: 'dna',
   },

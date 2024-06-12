@@ -23,11 +23,10 @@ const analysisInfo = [
 ];
 
 const options = {
-  width: 900,
-  height: 200,
-  leftRightBorders: 10,
+  width: 400,
+  leftRightBorders: 30,
   spaceBetweenResidues: 20,
-  spaceBetweenInternalLines: 10,
+  spaceBetweenInternalLines: 12,
   parsing: {
     kind: 'peptide',
   },

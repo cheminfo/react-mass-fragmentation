@@ -1,4 +1,4 @@
-export function SVGSequenceElement({ element, index, options }) {
+export function SVGSequenceElement({ element, y, index, options }) {
   const {
     leftRightBorders = 50,
     spaceBetweenResidues = 30,
@@ -6,7 +6,6 @@ export function SVGSequenceElement({ element, index, options }) {
     labelSize = 12,
   } = options;
   const x = String(leftRightBorders + index * spaceBetweenResidues);
-  const y = '69';
   let color = '#555555';
   if (element.replaced) {
     color = 'darkviolet';
@@ -21,7 +20,7 @@ export function SVGSequenceElement({ element, index, options }) {
       fill={color}
       x={x}
       y={y}
-      svgjs:data="{'leading':'1.3'}"
+      textAnchor="middle"
     >
       {element.label}
     </text>

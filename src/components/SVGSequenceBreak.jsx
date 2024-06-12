@@ -1,8 +1,7 @@
 import { SVGSequenceBreakFromBegin } from './SVGSequenceBreakFromBegin';
 import { SVGSequenceBreakFromEnd } from './SVGSequenceBreakFromEnd';
-import { SVGSequenceBreakLabel } from './SVGSequenceBreakLabel';
 
-export function SVGSequenceBreak({ breaks, options }) {
+export function SVGSequenceBreak({ breaks, firstIndexOnLine, y, options }) {
   return (
     <>
       {breaks
@@ -10,6 +9,8 @@ export function SVGSequenceBreak({ breaks, options }) {
         .map((b, index) => (
           <SVGSequenceBreakFromBegin
             sequenceBreak={b}
+            indexOnLine={b.position - firstIndexOnLine}
+            y={y}
             options={options}
             key={`breakFromBegin-${index}`}
           />
@@ -19,6 +20,8 @@ export function SVGSequenceBreak({ breaks, options }) {
         .map((b, index) => (
           <SVGSequenceBreakFromEnd
             sequenceBreak={b}
+            indexOnLine={b.position - firstIndexOnLine}
+            y={y}
             options={options}
             key={`breakFromEnd-${index}`}
           />
