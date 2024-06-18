@@ -48,7 +48,7 @@ let analysisInfo = [
 ];
 
 let options = {
-  width: 200,
+  width: 300,
   leftRightBorders: 50,
   spaceBetweenResidues: 20,
   spaceBetweenInternalLines: 12,

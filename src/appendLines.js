@@ -7,6 +7,13 @@ function maxBreaksOnSequenceLine(breaks) {
   }
   return maxBreaks;
 }
+function totalFragments(fragements) {
+  let total = 0;
+  for (let f of fragements) {
+    total += f.members.length;
+  }
+  return total;
+}
 
 export function appendLines(data, options) {
   const {
@@ -45,13 +52,14 @@ export function appendLines(data, options) {
   data.height = 0;
   let lastHeightBelow = 0;
   for (let L of lines) {
-    const nbFragment = L.fragments.length;
+    const nbFragment = totalFragments(L.fragments);
     const maxBreakAbove =
       maxBreaksOnSequenceLine(L.break.filter((b) => b.fromEnd)) + 1; // 1 : sequence line height + break symbols spaces
     const maxBreakBelow =
       maxBreaksOnSequenceLine(L.break.filter((b) => b.fromBegin)) + 1;
     L.heightBelow = maxBreakBelow * spaceBetweenInternalLines;
-    L.heightAbove = (maxBreakAbove + nbFragment) * spaceBetweenInternalLines;
+    L.heightAbove =
+      (maxBreakAbove + nbFragment + 1) * spaceBetweenInternalLines;
     data.height += L.heightBelow + L.heightAbove;
     L.totalheightAbove = lastHeightBelow + L.heightAbove;
     L.y = data.height - L.heightBelow;

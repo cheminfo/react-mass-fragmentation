@@ -45,7 +45,8 @@ export function appendResults(data, analysisResult, options = {}) {
       if (parts[1].match(/^[abcd][1-9]/)) {
         [parts[0], parts[1]] = [parts[1], parts[0]];
       }
-      result.to = getNumber(parts[0]) - 1;
+      // result.to = getNumber(parts[0]) - 1;
+      result.to = getNumber(parts[0]);
       result.from = numberResidues - getNumber(parts[1]);
     } else {
       if (parts[0].match(/^[abcd][1-9]/)) {

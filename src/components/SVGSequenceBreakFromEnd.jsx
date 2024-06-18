@@ -1,4 +1,4 @@
-import { SVGSequenceBreakLabel } from './SVGSequenceBreakLabel';
+import { SVGSequenceLabel } from './SVGSequenceLabel';
 
 export function SVGSequenceBreakFromEnd({
   sequenceBreak,
@@ -11,7 +11,6 @@ export function SVGSequenceBreakFromEnd({
     spaceBetweenResidues = 30,
     spaceBetweenInternalLines = 12,
     strokeWidth = 2,
-    labelSize = 8,
   } = options;
   const xStart = leftRightBorders + 1.5 * spaceBetweenResidues + strokeWidth;
   const x = xStart + indexOnLine * spaceBetweenResidues;
@@ -36,12 +35,13 @@ export function SVGSequenceBreakFromEnd({
         stroke={sequenceBreak.color}
       />
       {sequenceBreak.members.map((m, index) => (
-        <SVGSequenceBreakLabel
+        <SVGSequenceLabel
           x={x}
-          y={String(Number(y) - 15 - index * labelSize)}
+          y={String(Number(y) - 15 - index * spaceBetweenInternalLines)}
           label={m.type}
           charge={m.charge}
           similarity={Math.trunc(m.similarity * 100)}
+          textColor={m.textColor}
           options={options}
           key={`breakLabelFromEnd${m.type}${String(index)}`}
         />

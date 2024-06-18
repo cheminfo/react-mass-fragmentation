@@ -23,7 +23,7 @@ const analysisInfo = [
 ];
 
 const options = {
-  width: 400,
+  width: 500,
   leftRightBorders: 30,
   spaceBetweenResidues: 20,
   spaceBetweenInternalLines: 12,
