@@ -1,50 +1,37 @@
 import { SVGSequenceLabel } from './SVGSequenceLabel';
 
-export function SVGSequenceBreakFromEnd({
-  sequenceBreak,
-  indexOnLine,
-  y,
-  options,
-}) {
-  const {
-    leftRightBorders = 50,
-    spaceBetweenResidues = 30,
-    spaceBetweenInternalLines = 12,
-    strokeWidth = 2,
-  } = options;
-  const xStart = leftRightBorders + 1.5 * spaceBetweenResidues + strokeWidth;
-  const x = xStart + indexOnLine * spaceBetweenResidues;
+export function SVGSequenceBreakFromEnd({ sequenceBreak, options }) {
+  const { spaceBetweenInternalLines = 12, strokeWidth = 2 } = options;
   return (
     <>
       <line
-        x1={x}
-        y1={y}
-        x2={x}
-        y2={String(Number(y) - 8)}
+        y2={-8}
         strokeLinecap="round"
         strokeWidth={strokeWidth}
         stroke={sequenceBreak.color}
       />
       <line
-        x1={x}
-        y1={String(Number(y) - 8)}
-        x2={String(Number(x) + 5)}
-        y2={String(Number(y) - 8 - 5)}
+        y1={-8}
+        x2={5}
+        y2={-8 - 5}
         strokeLinecap="round"
         strokeWidth={strokeWidth}
         stroke={sequenceBreak.color}
       />
       {sequenceBreak.members.map((m, index) => (
-        <SVGSequenceLabel
-          x={x}
-          y={String(Number(y) - 15 - index * spaceBetweenInternalLines)}
-          label={m.type}
-          charge={m.charge}
-          similarity={Math.trunc(m.similarity * 100)}
-          textColor={m.textColor}
-          options={options}
-          key={`breakLabelFromEnd${m.type}${String(index)}`}
-        />
+        <g
+          transform={`translate(5 ${-15 - index * spaceBetweenInternalLines})`}
+          key={`group-breakLabel${m.type}${index}`}
+        >
+          <SVGSequenceLabel
+            label={m.type}
+            charge={m.charge}
+            similarity={Math.trunc(m.similarity * 100)}
+            textColor={m.textColor}
+            options={options}
+            key={`breakLabelFromEnd${m.type}${String(index)}`}
+          />
+        </g>
       ))}
     </>
   );

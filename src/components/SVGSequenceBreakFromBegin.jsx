@@ -1,50 +1,36 @@
 import { SVGSequenceLabel } from './SVGSequenceLabel';
 
-export function SVGSequenceBreakFromBegin({
-  sequenceBreak,
-  indexOnLine,
-  y,
-  options,
-}) {
-  const {
-    leftRightBorders = 50,
-    spaceBetweenResidues = 30,
-    spaceBetweenInternalLines = 12,
-    strokeWidth = 2,
-  } = options;
-  const xStart = leftRightBorders + 1.5 * spaceBetweenResidues - strokeWidth;
-  const x = xStart + indexOnLine * spaceBetweenResidues;
+export function SVGSequenceBreakFromBegin({ sequenceBreak, options }) {
+  const { spaceBetweenInternalLines = 12, strokeWidth = 2 } = options;
   return (
     <>
       <line
-        x1={x}
-        y1={y}
-        x2={x}
-        y2={String(Number(y) - 8)}
+        y2={-8}
         strokeLinecap="round"
         strokeWidth={strokeWidth}
         stroke={sequenceBreak.color}
       />
       <line
-        x1={x}
-        y1={y}
-        x2={String(Number(x) - 5)}
-        y2={String(Number(y) + 5)}
+        x2={-5}
+        y2={5}
         strokeLinecap="round"
         strokeWidth={strokeWidth}
         stroke={sequenceBreak.color}
       />
       {sequenceBreak.members.map((m, index) => (
-        <SVGSequenceLabel
-          x={x}
-          y={String(Number(y) + 15 + index * spaceBetweenInternalLines)}
-          label={m.type}
-          charge={m.charge}
-          similarity={Math.trunc(m.similarity * 100)}
-          textColor={m.textColor}
-          options={options}
-          key={`breakLabelFromBegin${m.type}${String(index)}`}
-        />
+        <g
+          transform={`translate(0 ${2 + (index + 1) * spaceBetweenInternalLines})`}
+          key={`group-breakLabel${m.type}${index}`}
+        >
+          <SVGSequenceLabel
+            label={m.type}
+            charge={m.charge}
+            similarity={Math.trunc(m.similarity * 100)}
+            textColor={m.textColor}
+            options={options}
+            key={`breakLabelFromBegin${m.type}${index}`}
+          />
+        </g>
       ))}
     </>
   );
