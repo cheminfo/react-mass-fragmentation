@@ -31,16 +31,12 @@ function initMassFragmentationData(sequence, analysisResults, options = {}) {
 
 export function SVGMassFragmentation({ sequence, analysisInfo, options }) {
   const {
-    width = 600,
     leftRightBorders = 50,
     spaceBetweenResidues = 30,
     spaceBetweenInternalLines = 12,
     strokeWidth = 2,
     labelFontFamily = 'Verdana',
-    labelSize = 8,
-    parsing,
-    merge,
-    filter,
+    labelSize = 12,
   } = options;
   const data = initMassFragmentationData(sequence, analysisInfo, options);
   return (
@@ -49,32 +45,58 @@ export function SVGMassFragmentation({ sequence, analysisInfo, options }) {
       viewBox={`0 0 ${options.width} ${data.height}`}
       key={`SVG-${generateReactKey('')}`}
     >
-      {data.lines.map((line, index) => (
-        <React.Fragment key={`SVGLine-${index}`}>
-          <SVGSequence
-            sequence={line.residues}
-            y={line.y}
-            options={options}
-            key={generateReactKey(`SVGLine-${index}`)}
-          />
-          <SVGSequenceBreak
-            breaks={line.break}
-            firstIndexOnLine={line.from}
-            y={line.y}
-            options={options}
-            key={generateReactKey(`sequenceBreak-${index}`)}
-          />
-          <SVGSequenceFragments
-            fragments={line.fragments}
-            firstIndexOnLine={line.from}
-            y={
-              line.y -
-              (maxSequenceBreakAbove(line.break.filter((b) => b.fromEnd)) + 1) *
-                spaceBetweenInternalLines
-            }
-            options={options}
-            key={`SVGFragments-${index}`}
-          />
+      <style>
+        {`.sequenceElementStyle{
+          font: bold 12
+        }
+          .labelStyle{
+          font: ${labelSize}
+          }
+        `}
+      </style>
+      {data.lines.map((line, LineIndex) => (
+        <React.Fragment key={`SVGLine-${LineIndex}`}>
+          <g
+            transform={`translate(0 ${line.y})`}
+            fontFamily={labelFontFamily}
+            fontWeight="bold"
+            key={`group-SVGMassFragmentationLine-${LineIndex}`}
+          >
+            <g fontSize={12} key={`group-SVGSequence-${LineIndex}`}>
+              <SVGSequence
+                sequence={line.residues}
+                options={options}
+                key={generateReactKey(`SVGLine-${LineIndex}`)}
+              />
+            </g>
+            <g
+              fontSize={labelSize}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+              transform={`translate(${leftRightBorders + 1.5 * spaceBetweenResidues})`}
+              key={`group-SVGSequenceBreak-${LineIndex}`}
+            >
+              <SVGSequenceBreak
+                breaks={line.break}
+                options={options}
+                key={generateReactKey(`sequenceBreak-${LineIndex}`)}
+              />
+            </g>
+            <g
+              transform={`translate(0 ${
+                -(
+                  maxSequenceBreakAbove(line.break.filter((b) => b.fromEnd)) + 1
+                ) * spaceBetweenInternalLines
+              })`}
+              key={`group-SVGSequenceFragments-${LineIndex}`}
+            >
+              <SVGSequenceFragments
+                fragments={line.fragments}
+                options={options}
+                key={`SVGFragments-${LineIndex}`}
+              />
+            </g>
+          </g>
         </React.Fragment>
       ))}
     </svg>

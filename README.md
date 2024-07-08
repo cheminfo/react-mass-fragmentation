@@ -8,6 +8,7 @@
 ## Introduction
 
 This project allows to display mass fragmentation of peptide or nucleotides.
+See https://github.com/cheminfo/mass-tools/tree/main/packages/ms-report.
 
 ## License
 

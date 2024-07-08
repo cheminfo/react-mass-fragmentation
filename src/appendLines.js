@@ -7,12 +7,26 @@ function maxBreaksOnSequenceLine(breaks) {
   }
   return maxBreaks;
 }
-function totalFragments(fragements) {
+
+function totalFragments(fragments) {
   let total = 0;
-  for (let f of fragements) {
+  for (let f of fragments) {
     total += f.members.length;
   }
   return total;
+}
+
+function updatePositionOnLine(Lines) {
+  for (let i = 0; i < Lines.length; i++) {
+    for (let b of Lines[i].break) {
+      b.position = b.position - Lines[i].from;
+    }
+    for (let f of Lines[i].fragments) {
+      f.from = f.from < Lines[i].from ? -1 : f.from - Lines[i].from;
+      f.to = f.to > Lines[i].to ? Lines[i].to + 1 : f.to - Lines[i].from;
+    }
+  }
+  return Lines;
 }
 
 export function appendLines(data, options) {
@@ -21,9 +35,6 @@ export function appendLines(data, options) {
     leftRightBorders = 50,
     spaceBetweenResidues = 30,
     spaceBetweenInternalLines = 12,
-    strokeWidth = 2,
-    labelFontFamily = 'Verdana',
-    labelSize = 8,
   } = options;
   const usefullWidth = width - 2 * leftRightBorders;
   const nbElementByLine = Math.trunc(usefullWidth / spaceBetweenResidues);
@@ -33,18 +44,21 @@ export function appendLines(data, options) {
     const line = {
       from: i * nbElementByLine,
       to: (i + 1) * nbElementByLine,
-      residues: data.residues.all.slice(
-        i * nbElementByLine,
-        (i + 1) * nbElementByLine,
+      residues: structuredClone(
+        data.residues.all.slice(i * nbElementByLine, (i + 1) * nbElementByLine),
       ),
-      break: data.results.break.filter(
-        (b) =>
-          b.position + 1 >= i * nbElementByLine &&
-          b.position + 1 < (i + 1) * nbElementByLine,
+      break: structuredClone(
+        data.results.break.filter(
+          (b) =>
+            b.position + 1 >= i * nbElementByLine &&
+            b.position + 1 < (i + 1) * nbElementByLine,
+        ),
       ),
-      fragments: data.results.fragment.filter(
-        (f) =>
-          f.from >= i * nbElementByLine || f.to <= (i + 1) * nbElementByLine,
+      fragments: structuredClone(
+        data.results.fragment.filter(
+          (f) =>
+            f.from >= i * nbElementByLine || f.to <= (i + 1) * nbElementByLine,
+        ),
       ),
     };
     lines.push(line);
@@ -65,5 +79,6 @@ export function appendLines(data, options) {
     L.y = data.height - L.heightBelow;
     lastHeightBelow = L.heightBelow;
   }
+  updatePositionOnLine(lines);
   data.lines = lines;
 }

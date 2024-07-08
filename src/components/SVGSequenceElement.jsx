@@ -1,4 +1,4 @@
-export function SVGSequenceElement({ element, y, index, options }) {
+export function SVGSequenceElement({ element, index, options }) {
   const {
     leftRightBorders = 50,
     spaceBetweenResidues = 30,
@@ -19,7 +19,6 @@ export function SVGSequenceElement({ element, y, index, options }) {
       fontWeight="bold"
       fill={color}
       x={x}
-      y={y}
       textAnchor="middle"
     >
       {element.label}

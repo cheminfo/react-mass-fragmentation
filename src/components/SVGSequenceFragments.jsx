@@ -1,20 +1,6 @@
 import { SVGFragment } from './SVGFragment';
 
-export function SVGSequenceFragments({
-  fragments,
-  firstIndexOnLine,
-  y,
-  options,
-}) {
-  const {
-    width = 600,
-    leftRightBorders = 50,
-    spaceBetweenResidues = 30,
-    spaceBetweenInternalLines = 12,
-    strokeWidth = 2,
-    labelFontFamily = 'Verdana',
-    labelSize = 8,
-  } = options;
+export function SVGSequenceFragments({ fragments, options }) {
   let indexFragment = 0;
   return (
     <>
@@ -24,11 +10,9 @@ export function SVGSequenceFragments({
         return (
           <SVGFragment
             fragment={fragment}
-            firstIndexOnLine={firstIndexOnLine}
-            y={y}
             indexFragment={iF}
             options={options}
-            key={`SVGFragment-${index}`}
+            key={`SVGFragment-${index}-${iF}`}
           />
         );
       })}

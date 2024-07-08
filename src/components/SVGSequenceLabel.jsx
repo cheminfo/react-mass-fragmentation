@@ -8,7 +8,7 @@ export function SVGSequenceLabel({
   const { labelFontFamily = 'Verdana', labelSize = 12 } = options;
   const fontSize = String((2 * Number(labelSize)) / 3);
   return (
-    <g>
+    <>
       <text
         fill={textColor}
         fontFamily={labelFontFamily}
@@ -21,7 +21,7 @@ export function SVGSequenceLabel({
       <text
         fill={textColor}
         fontFamily={labelFontFamily}
-        fontSize={String(Number(fontSize) / 2)}
+        fontSize={fontSize / 2}
         y={-(fontSize / 2)}
       >
         {charge}
@@ -29,10 +29,10 @@ export function SVGSequenceLabel({
       <text
         fill={textColor}
         fontFamily={labelFontFamily}
-        fontSize={String(Number(fontSize) / 2)}
+        fontSize={fontSize / 2}
       >
         {similarity}
       </text>
-    </g>
+    </>
   );
 }
