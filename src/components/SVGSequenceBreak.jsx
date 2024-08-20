@@ -1,6 +1,6 @@
 import { SVGSequenceLabel } from './SVGSequenceLabel';
 
-export function SVGSequenceBreak({ breaks, options }) {
+export function SVGSequenceBreak({ internals, options }) {
   const {
     spaceBetweenResidues = 30,
     spaceBetweenInternalLines = 12,
@@ -8,26 +8,22 @@ export function SVGSequenceBreak({ breaks, options }) {
   } = options;
   return (
     <>
-      {breaks.map((sequenceBreak, index) => (
+      {internals.map((internal, index) => (
         <g
-          transform={`translate(${(sequenceBreak.fromBegin ? -1 : 1) * strokeWidth + sequenceBreak.position * spaceBetweenResidues} 0)`}
+          transform={`translate(${(internal.fromBegin ? -1 : 1) * strokeWidth + internal.position * spaceBetweenResidues} 0)`}
           key={`group-SequenceBreak-${index}`}
         >
+          <line y2={-8} stroke={internal.color} strokeWidth={strokeWidth} />
           <line
-            y2={-8}
-            stroke={sequenceBreak.color}
+            x2={internal.fromBegin ? -5 : 5}
+            y1={internal.fromBegin ? 0 : -8}
+            y2={internal.fromBegin ? 5 : -8 - 5}
+            stroke={internal.color}
             strokeWidth={strokeWidth}
           />
-          <line
-            x2={sequenceBreak.fromBegin ? -5 : 5}
-            y1={sequenceBreak.fromBegin ? 0 : -8}
-            y2={sequenceBreak.fromBegin ? 5 : -8 - 5}
-            stroke={sequenceBreak.color}
-            strokeWidth={strokeWidth}
-          />
-          {sequenceBreak.members.map((m, index) => (
+          {internal.members.map((m, index) => (
             <g
-              transform={`translate(0 ${sequenceBreak.fromBegin ? 2 + (index + 1) * spaceBetweenInternalLines : -15 - index * spaceBetweenInternalLines})`}
+              transform={`translate(0 ${internal.fromBegin ? 2 + (index + 1) * spaceBetweenInternalLines : -15 - index * spaceBetweenInternalLines})`}
               key={`group-breakLabel-${m.type}${index}`}
             >
               <SVGSequenceLabel

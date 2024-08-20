@@ -9,9 +9,9 @@ import { SVGSequence } from './SVGSequence.jsx';
 import { SVGSequenceBreak } from './SVGSequenceBreak.jsx';
 import { SVGSequenceFragments } from './SVGSequenceFragments.jsx';
 
-function maxSequenceBreakAbove(breaks) {
+function maxSequenceBreakAbove(internals) {
   let max = 0;
-  for (let b of breaks) {
+  for (let b of internals) {
     if (b.members.length > max) max = b.members.length;
   }
   return max;
@@ -66,7 +66,7 @@ export function SVGMassFragmentation({ sequence, analysisInfo, options }) {
               key={`group-SVGSequenceBreak-${index}`}
             >
               <SVGSequenceBreak
-                breaks={line.break}
+                internals={line.break}
                 options={options}
                 key={generateReactKey(`sequenceBreak-${index}`)}
               />

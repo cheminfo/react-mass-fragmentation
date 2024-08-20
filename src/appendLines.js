@@ -1,6 +1,6 @@
-function maxBreaksOnSequenceLine(breaks) {
+function maxBreaksOnSequenceLine(internals) {
   let maxBreaks = 0;
-  for (let b of breaks) {
+  for (let b of internals) {
     if (b.members.length > maxBreaks) {
       maxBreaks = b.members.length;
     }
