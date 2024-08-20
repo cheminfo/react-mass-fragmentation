@@ -45,15 +45,6 @@ export function SVGMassFragmentation({ sequence, analysisInfo, options }) {
       viewBox={`0 0 ${options.width} ${data.height}`}
       key={`SVG-${generateReactKey('')}`}
     >
-      <style>
-        {`.sequenceElementStyle{
-          font: bold 12
-        }
-          .labelStyle{
-          font: ${labelSize}
-          }
-        `}
-      </style>
       {data.lines.map((line, LineIndex) => (
         <React.Fragment key={`SVGLine-${LineIndex}`}>
           <g
