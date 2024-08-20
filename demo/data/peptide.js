@@ -23,9 +23,9 @@ const analysisInfo = [
 ];
 
 const options = {
-  width: 500,
-  leftRightBorders: 30,
-  spaceBetweenResidues: 20,
+  width: 700,
+  leftRightBorders: 50,
+  spaceBetweenResidues: 30,
   spaceBetweenInternalLines: 12,
   parsing: {
     kind: 'peptide',

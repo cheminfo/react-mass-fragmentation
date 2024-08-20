@@ -48,9 +48,9 @@ let analysisInfo = [
 ];
 
 let options = {
-  width: 300,
+  width: 700,
   leftRightBorders: 50,
-  spaceBetweenResidues: 20,
+  spaceBetweenResidues: 30,
   spaceBetweenInternalLines: 12,
   parsing: {
     kind: 'dna',
