@@ -16,17 +16,22 @@ function totalFragments(fragments) {
   return total;
 }
 
-function updatePositionOnLine(Lines) {
-  for (let i = 0; i < Lines.length; i++) {
-    for (let b of Lines[i].break) {
-      b.position = b.position - Lines[i].from;
+/**
+ * 
+ * @param {Array<{from: number, to:number}>} lines 
+ * @returns 
+ */
+function updatePositionOnLine(lines) {
+  for (let i = 0; i < lines.length; i++) {
+    for (let b of lines[i].break) {
+      b.position = b.position - lines[i].from;
     }
-    for (let f of Lines[i].fragments) {
-      f.from = f.from < Lines[i].from ? -1 : f.from - Lines[i].from;
-      f.to = f.to > Lines[i].to ? Lines[i].to + 1 : f.to - Lines[i].from;
+    for (let f of lines[i].fragments) {
+      f.from = f.from < lines[i].from ? -1 : f.from - lines[i].from;
+      f.to = f.to > lines[i].to ? lines[i].to + 1 : f.to - lines[i].from;
     }
   }
-  return Lines;
+  return lines;
 }
 
 export function appendLines(data, options) {
@@ -36,8 +41,8 @@ export function appendLines(data, options) {
     spaceBetweenResidues = 30,
     spaceBetweenInternalLines = 12,
   } = options;
-  const usefullWidth = width - 2 * leftRightBorders;
-  const nbElementByLine = Math.trunc(usefullWidth / spaceBetweenResidues);
+  const usefulWidth = width - 2 * leftRightBorders;
+  const nbElementByLine = Math.trunc(usefulWidth / spaceBetweenResidues);
   const nbLine = Math.ceil(data.residues.all.length / nbElementByLine);
   const lines = [];
   for (let i = 0; i < nbLine; i++) {
@@ -65,19 +70,19 @@ export function appendLines(data, options) {
   }
   data.height = 0;
   let lastHeightBelow = 0;
-  for (let L of lines) {
-    const nbFragment = totalFragments(L.fragments);
+  for (let line of lines) {
+    const nbFragment = totalFragments(line.fragments);
     const maxBreakAbove =
-      maxBreaksOnSequenceLine(L.break.filter((b) => b.fromEnd)) + 1; // 1 : sequence line height + break symbols spaces
+      maxBreaksOnSequenceLine(line.break.filter((b) => b.fromEnd)) + 1; // 1 : sequence line height + break symbols spaces
     const maxBreakBelow =
-      maxBreaksOnSequenceLine(L.break.filter((b) => b.fromBegin)) + 1;
-    L.heightBelow = maxBreakBelow * spaceBetweenInternalLines;
-    L.heightAbove =
+      maxBreaksOnSequenceLine(line.break.filter((b) => b.fromBegin)) + 1;
+    line.heightBelow = maxBreakBelow * spaceBetweenInternalLines;
+    line.heightAbove =
       (maxBreakAbove + nbFragment + 1) * spaceBetweenInternalLines;
-    data.height += L.heightBelow + L.heightAbove;
-    L.totalheightAbove = lastHeightBelow + L.heightAbove;
-    L.y = data.height - L.heightBelow;
-    lastHeightBelow = L.heightBelow;
+    data.height += line.heightBelow + line.heightAbove;
+    line.totalheightAbove = lastHeightBelow + line.heightAbove;
+    line.y = data.height - line.heightBelow;
+    lastHeightBelow = line.heightBelow;
   }
   updatePositionOnLine(lines);
   data.lines = lines;

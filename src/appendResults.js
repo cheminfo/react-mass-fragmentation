@@ -1,3 +1,6 @@
+/** 
+ * 
+ */
 export function sortResults(data) {
   let results = data.results;
   let newResults = {
@@ -5,27 +8,27 @@ export function sortResults(data) {
     break: [],
   };
   while (results.length > 0) {
-    let r = results.pop();
-    const resultType = 'position' in r ? 'break' : 'fragment';
+    const result = results.pop();
+    const resultType = 'position' in result ? 'break' : 'fragment';
     const index = newResults[resultType].findIndex((element) =>
-      'position' in r
-        ? element.position === r.position &&
-          (element.fromBegin === r.fromBegin || element.fromEnd === r.fromEnd)
-        : element.from === r.from && element.to === r.to,
+      'position' in result
+        ? element.position === result.position &&
+        (element.fromBegin === result.fromBegin || element.fromEnd === result.fromEnd)
+        : element.from === result.from && element.to === result.to,
     );
-    r.members = [
+    result.members = [
       {
-        type: r.type,
-        charge: r.charge,
-        similarity: r.similarity,
-        textColor: r.textColor,
+        type: result.type,
+        charge: result.charge,
+        similarity: result.similarity,
+        textColor: result.textColor,
       },
     ];
-    const { type, charge, similarity, textColor, ...rslt } = r;
+    const { type, charge, similarity, textColor, ...newResult } = result;
     if (index === -1) {
-      newResults[resultType].push(rslt);
+      newResults[resultType].push(newResult);
     } else {
-      newResults[resultType][index].members.push(rslt.members[0]);
+      newResults[resultType][index].members.push(newResult.members[0]);
     }
   }
   data.results = newResults;

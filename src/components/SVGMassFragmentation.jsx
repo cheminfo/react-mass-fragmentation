@@ -1,5 +1,4 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
 
 import { appendLines } from '../appendLines.js';
 import { appendResidues } from '../appendResidues.js';
@@ -25,7 +24,6 @@ function initMassFragmentationData(sequence, analysisResults, options = {}) {
   appendResults(data, analysisResults, { merge, filter });
   sortResults(data);
   appendLines(data, options);
-  console.log(data);
   return data;
 }
 
@@ -45,19 +43,19 @@ export function SVGMassFragmentation({ sequence, analysisInfo, options }) {
       viewBox={`0 0 ${options.width} ${data.height}`}
       key={`SVG-${generateReactKey('')}`}
     >
-      {data.lines.map((line, LineIndex) => (
-        <React.Fragment key={`SVGLine-${LineIndex}`}>
+      {data.lines.map((line, index) => (
+        <React.Fragment key={`SVGLine-${index}`}>
           <g
             transform={`translate(0 ${line.y})`}
             fontFamily={labelFontFamily}
             fontWeight="bold"
-            key={`group-SVGMassFragmentationLine-${LineIndex}`}
+            key={`group-SVGMassFragmentationLine-${index}`}
           >
-            <g fontSize={12} key={`group-SVGSequence-${LineIndex}`}>
+            <g fontSize={12} key={`group-SVGSequence-${index}`}>
               <SVGSequence
                 sequence={line.residues}
                 options={options}
-                key={generateReactKey(`SVGLine-${LineIndex}`)}
+                key={generateReactKey(`SVGLine-${index}`)}
               />
             </g>
             <g
@@ -65,12 +63,12 @@ export function SVGMassFragmentation({ sequence, analysisInfo, options }) {
               strokeWidth={strokeWidth}
               strokeLinecap="round"
               transform={`translate(${leftRightBorders + 1.5 * spaceBetweenResidues})`}
-              key={`group-SVGSequenceBreak-${LineIndex}`}
+              key={`group-SVGSequenceBreak-${index}`}
             >
               <SVGSequenceBreak
                 breaks={line.break}
                 options={options}
-                key={generateReactKey(`sequenceBreak-${LineIndex}`)}
+                key={generateReactKey(`sequenceBreak-${index}`)}
               />
             </g>
             <g
@@ -79,12 +77,12 @@ export function SVGMassFragmentation({ sequence, analysisInfo, options }) {
                   maxSequenceBreakAbove(line.break.filter((b) => b.fromEnd)) + 1
                 ) * spaceBetweenInternalLines
               })`}
-              key={`group-SVGSequenceFragments-${LineIndex}`}
+              key={`group-SVGSequenceFragments-${index}`}
             >
               <SVGSequenceFragments
                 fragments={line.fragments}
                 options={options}
-                key={`SVGFragments-${LineIndex}`}
+                key={`SVGFragments-${index}`}
               />
             </g>
           </g>

@@ -9,13 +9,13 @@ let currentSymbol = 0;
 
 /**
  * Code that allows to split a sequence of amino acids or nucleotides natural or non natural
- * @param {string} [sequence]
+ * @param {object} data
+ * @param {string} sequence
  * @param {object} [options={}]
- * @param {string} [options.kind] - peptide, rna, ds-dna or dna. Default if contains U: rna, otherwise ds-dna
- * @param {string} [options.fivePrime=monophosphate] - alcohol, monophosphate, diphosphate, triphosphate
+ * @param {'peptide'|'rna'|'ds-dna'|'dna'} [options.kind] - peptide, rna, ds-dna or dna. Default if contains U: rna, otherwise ds-dna
+ * @param {'alcohol'|'monophosphate'|'diphosphate'|'triphosphate'} [options.fivePrime=monophosphate] - alcohol, monophosphate, diphosphate, triphosphate
  * @param {string} [options.circular=false]
  */
-
 export function appendResidues(data, sequence, options = {}) {
   const { kind = 'peptide' } = options;
 
@@ -28,6 +28,9 @@ export function appendResidues(data, sequence, options = {}) {
     sequence = Nucleotide.sequenceToMF(sequence, options);
   }
 
+  /**
+ * @type {{begin: string, end: string, residues: string[]}}
+ */
   const result = {
     begin: '',
     end: '',
@@ -103,10 +106,10 @@ export function appendResidues(data, sequence, options = {}) {
         begin: [],
         end: [],
       },
+      fromBegin: i + 1,
+      fromEnd: result.residues.length - i,
+      kind: 'residue'
     };
-    residue.fromBegin = i + 1;
-    residue.fromEnd = result.residues.length - i;
-    residue.kind = 'residue';
     if (label.includes('(')) {
       getModifiedReplacement(label, residue, alternatives, replacements);
     } else if (groupsObject[label] && groupsObject[label].oneLetter) {
@@ -201,6 +204,10 @@ function getModifiedReplacement(
   residue.label = replacements[modifiedResidue].label;
 }
 
+/**
+ * @param {string} mf - molecular formula
+ * @returns {string}
+ */
 function removeStartEndParenthesis(mf) {
   if (mf[0] === '(' && mf[mf.length - 1] === ')') {
     return mf.substring(1, mf.length - 1);
