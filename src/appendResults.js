@@ -1,19 +1,20 @@
-/** 
- * 
+/**
+ *
  */
 export function sortResults(data) {
   let results = data.results;
   let newResults = {
-    fragment: [],
-    break: [],
+    internals: [],
+    fragments: [],
   };
   while (results.length > 0) {
     const result = results.pop();
-    const resultType = 'position' in result ? 'break' : 'fragment';
+    const resultType = 'position' in result ? 'fragments' : 'internals';
     const index = newResults[resultType].findIndex((element) =>
       'position' in result
         ? element.position === result.position &&
-        (element.fromBegin === result.fromBegin || element.fromEnd === result.fromEnd)
+          (element.fromBegin === result.fromBegin ||
+            element.fromEnd === result.fromEnd)
         : element.from === result.from && element.to === result.to,
     );
     result.members = [

@@ -1,8 +1,9 @@
 import React from 'react';
+import { v4 as uuid } from 'uuid';
 
 import { SVGSequenceLabel } from './SVGSequenceLabel';
 
-export function SVGFragment({ fragment, indexFragment, options }) {
+export function SVGInternal({ internal, indexInternal, options }) {
   const {
     leftRightBorders = 50,
     spaceBetweenResidues = 30,
@@ -10,30 +11,30 @@ export function SVGFragment({ fragment, indexFragment, options }) {
     strokeWidth = 2,
   } = options;
   const xStart =
-    fragment.from === -1
+    internal.from === -1
       ? 0
-      : leftRightBorders + fragment.from * spaceBetweenResidues;
-  const xEnd = leftRightBorders + fragment.to * spaceBetweenResidues;
-  const yLine = -indexFragment * spaceBetweenInternalLines;
+      : leftRightBorders + internal.from * spaceBetweenResidues;
+  const xEnd = leftRightBorders + internal.to * spaceBetweenResidues;
+  const yLine = -indexInternal * spaceBetweenInternalLines;
   return (
     <>
-      {fragment.members.map((member, memberIndex) => (
-        <React.Fragment key={`FragmentMember-${memberIndex}`}>
+      {internal.members.map((member, memberIndex) => (
+        <React.Fragment key={uuid()}>
           {
             <g
               transform={`translate(${xStart} ${yLine - memberIndex * spaceBetweenInternalLines})`}
-              key={`group-fragment-${memberIndex}`}
+              key={uuid()}
             >
               <line
                 x2={xEnd - xStart}
                 strokeLinecap="round"
                 strokeWidth={strokeWidth}
-                stroke={fragment.color}
-                key={`SVGFragment-${xStart}${xEnd}${memberIndex}`}
+                stroke={internal.color}
+                key={uuid()}
               />
               <g
                 transform={`translate(${(xEnd - xStart) / 2} ${-strokeWidth - 1})`}
-                key={`group-fragmentLabel-${memberIndex}`}
+                key={uuid()}
               >
                 <SVGSequenceLabel
                   label={member.type}
@@ -41,7 +42,7 @@ export function SVGFragment({ fragment, indexFragment, options }) {
                   similarity={Math.trunc(member.similarity * 100)}
                   textColor={member.textColor}
                   options={options}
-                  key={`fragmentLabel${member.type}${String(memberIndex)}`}
+                  key={uuid()}
                 />
               </g>
             </g>

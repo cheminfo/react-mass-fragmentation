@@ -1,34 +1,38 @@
-function maxBreaksOnSequenceLine(internals) {
-  let maxBreaks = 0;
-  for (let b of internals) {
-    if (b.members.length > maxBreaks) {
-      maxBreaks = b.members.length;
+function maxFragmentsOnSequenceLine(fragments) {
+  let maxFragments = 0;
+  for (let f of fragments) {
+    if (f.members.length > maxFragments) {
+      maxFragments = f.members.length;
     }
   }
-  return maxBreaks;
+  return maxFragments;
 }
 
-function totalFragments(fragments) {
+function totalInternals(internals) {
   let total = 0;
-  for (let f of fragments) {
-    total += f.members.length;
+  for (let i of internals) {
+    total += i.members.length;
   }
   return total;
 }
 
 /**
- * 
- * @param {Array<{from: number, to:number}>} lines 
- * @returns 
+ *
+ * @param {Array<{from: number, to:number}>} lines
+ * @returns
  */
 function updatePositionOnLine(lines) {
   for (let i = 0; i < lines.length; i++) {
-    for (let b of lines[i].break) {
-      b.position = b.position - lines[i].from;
-    }
     for (let f of lines[i].fragments) {
-      f.from = f.from < lines[i].from ? -1 : f.from - lines[i].from;
-      f.to = f.to > lines[i].to ? lines[i].to + 1 : f.to - lines[i].from;
+      f.position = f.position - lines[i].from;
+    }
+    for (let internal of lines[i].internals) {
+      internal.from =
+        internal.from < lines[i].from ? -1 : internal.from - lines[i].from;
+      internal.to =
+        internal.to > lines[i].to
+          ? lines[i].to + 1
+          : internal.to - lines[i].from;
     }
   }
   return lines;
@@ -52,17 +56,18 @@ export function appendLines(data, options) {
       residues: structuredClone(
         data.residues.all.slice(i * nbElementByLine, (i + 1) * nbElementByLine),
       ),
-      break: structuredClone(
-        data.results.break.filter(
-          (b) =>
-            b.position + 1 >= i * nbElementByLine &&
-            b.position + 1 < (i + 1) * nbElementByLine,
+      fragments: structuredClone(
+        data.results.fragments.filter(
+          (f) =>
+            f.position + 1 >= i * nbElementByLine &&
+            f.position + 1 < (i + 1) * nbElementByLine,
         ),
       ),
-      fragments: structuredClone(
-        data.results.fragment.filter(
-          (f) =>
-            f.from >= i * nbElementByLine || f.to <= (i + 1) * nbElementByLine,
+      internals: structuredClone(
+        data.results.internals.filter(
+          (internal) =>
+            internal.from >= i * nbElementByLine ||
+            internal.to <= (i + 1) * nbElementByLine,
         ),
       ),
     };
@@ -71,14 +76,14 @@ export function appendLines(data, options) {
   data.height = 0;
   let lastHeightBelow = 0;
   for (let line of lines) {
-    const nbFragment = totalFragments(line.fragments);
-    const maxBreakAbove =
-      maxBreaksOnSequenceLine(line.break.filter((b) => b.fromEnd)) + 1; // 1 : sequence line height + break symbols spaces
-    const maxBreakBelow =
-      maxBreaksOnSequenceLine(line.break.filter((b) => b.fromBegin)) + 1;
-    line.heightBelow = maxBreakBelow * spaceBetweenInternalLines;
+    const nbInternals = totalInternals(line.internals);
+    const maxFragmentsAbove =
+      maxFragmentsOnSequenceLine(line.fragments.filter((f) => f.fromEnd)) + 1; // 1 : sequence line height + break symbols spaces
+    const maxFragmentsBelow =
+      maxFragmentsOnSequenceLine(line.fragments.filter((f) => f.fromBegin)) + 1;
+    line.heightBelow = maxFragmentsBelow * spaceBetweenInternalLines;
     line.heightAbove =
-      (maxBreakAbove + nbFragment + 1) * spaceBetweenInternalLines;
+      (maxFragmentsAbove + nbInternals + 1) * spaceBetweenInternalLines;
     data.height += line.heightBelow + line.heightAbove;
     line.totalheightAbove = lastHeightBelow + line.heightAbove;
     line.y = data.height - line.heightBelow;

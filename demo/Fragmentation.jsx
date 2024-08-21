@@ -1,5 +1,6 @@
+import { v4 as uuid } from 'uuid';
+
 import { SVGMassFragmentation } from '../src/components/SVGMassFragmentation';
-import { generateReactKey } from '../src/generateReactKey.js';
 
 export default function Fragmentation({ sequence, analysisInfo, options }) {
   return (
@@ -8,13 +9,13 @@ export default function Fragmentation({ sequence, analysisInfo, options }) {
         border: '1px solid red',
         overflow: 'clip',
       }}
-      key={`SVG-${generateReactKey('')}`}
+      key={uuid()}
     >
       <SVGMassFragmentation
         sequence={sequence}
         analysisInfo={analysisInfo}
         options={options}
-        key={`SVGMassFragmentation-${generateReactKey('')}`}
+        key={uuid()}
       />
     </div>
   );

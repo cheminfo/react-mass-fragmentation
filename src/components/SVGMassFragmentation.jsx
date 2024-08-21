@@ -1,18 +1,18 @@
 import React from 'react';
+import { v4 as uuid } from 'uuid';
 
 import { appendLines } from '../appendLines.js';
 import { appendResidues } from '../appendResidues.js';
 import { appendResults, sortResults } from '../appendResults.js';
-import { generateReactKey } from '../generateReactKey.js';
 
 import { SVGSequence } from './SVGSequence.jsx';
-import { SVGSequenceBreak } from './SVGSequenceBreak.jsx';
-import { SVGSequenceFragments } from './SVGSequenceFragments.jsx';
+import { SVGSequenceFragment } from './SVGSequenceFragment.jsx';
+import { SVGSequenceInternals } from './SVGSequenceInternals.jsx';
 
 function maxSequenceBreakAbove(internals) {
   let max = 0;
-  for (let b of internals) {
-    if (b.members.length > max) max = b.members.length;
+  for (let i of internals) {
+    if (i.members.length > max) max = i.members.length;
   }
   return max;
 }
@@ -41,21 +41,21 @@ export function SVGMassFragmentation({ sequence, analysisInfo, options }) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox={`0 0 ${options.width} ${data.height}`}
-      key={`SVG-${generateReactKey('')}`}
+      key={uuid()}
     >
-      {data.lines.map((line, index) => (
-        <React.Fragment key={`SVGLine-${index}`}>
+      {data.lines.map((line) => (
+        <React.Fragment key={uuid()}>
           <g
             transform={`translate(0 ${line.y})`}
             fontFamily={labelFontFamily}
             fontWeight="bold"
-            key={`group-SVGMassFragmentationLine-${index}`}
+            key={uuid()}
           >
-            <g fontSize={12} key={`group-SVGSequence-${index}`}>
+            <g fontSize={12} key={uuid()}>
               <SVGSequence
                 sequence={line.residues}
                 options={options}
-                key={generateReactKey(`SVGLine-${index}`)}
+                key={uuid()}
               />
             </g>
             <g
@@ -63,26 +63,28 @@ export function SVGMassFragmentation({ sequence, analysisInfo, options }) {
               strokeWidth={strokeWidth}
               strokeLinecap="round"
               transform={`translate(${leftRightBorders + 1.5 * spaceBetweenResidues})`}
-              key={`group-SVGSequenceBreak-${index}`}
+              key={uuid()}
             >
-              <SVGSequenceBreak
-                internals={line.break}
+              <SVGSequenceFragment
+                fragments={line.fragments}
                 options={options}
-                key={generateReactKey(`sequenceBreak-${index}`)}
+                key={uuid()}
               />
             </g>
             <g
               transform={`translate(0 ${
                 -(
-                  maxSequenceBreakAbove(line.break.filter((b) => b.fromEnd)) + 1
+                  maxSequenceBreakAbove(
+                    line.fragments.filter((fragment) => fragment.fromEnd),
+                  ) + 1
                 ) * spaceBetweenInternalLines
               })`}
-              key={`group-SVGSequenceFragments-${index}`}
+              key={uuid()}
             >
-              <SVGSequenceFragments
-                fragments={line.fragments}
+              <SVGSequenceInternals
+                internals={line.internals}
                 options={options}
-                key={`SVGFragments-${index}`}
+                key={uuid()}
               />
             </g>
           </g>

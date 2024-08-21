@@ -35,7 +35,8 @@
     "chemical-groups": "^2.1.1",
     "mf-utilities": "^3.1.1",
     "nucleotide": "^3.0.3",
-    "peptide": "^2.1.2"
+    "peptide": "^2.1.2",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",

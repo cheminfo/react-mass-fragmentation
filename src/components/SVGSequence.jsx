@@ -1,4 +1,5 @@
 import React from 'react';
+import { v4 as uuid } from 'uuid';
 
 function elementColor(element) {
   if (element.replaced) {
@@ -15,7 +16,7 @@ export function SVGSequence({ sequence, options }) {
   return (
     <>
       {sequence.map((element, index) => (
-        <React.Fragment key={`SVGSequenceElement-${index}`}>
+        <React.Fragment key={uuid()}>
           <text
             fill={elementColor(element)}
             x={leftRightBorders + index * spaceBetweenResidues}

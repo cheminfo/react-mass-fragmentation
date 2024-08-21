@@ -1,7 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-
-import { generateReactKey } from '../src/generateReactKey';
+import { v4 as uuid } from 'uuid';
 
 import Fragmentation from './Fragmentation';
 import { nucleotide } from './data/nucleotide';
@@ -15,14 +14,14 @@ root.render(
       sequence={peptide.sequence}
       analysisInfo={peptide.analysisInfo}
       options={peptide.options}
-      key={`fragmentation-pept-${generateReactKey('')}`}
+      key={uuid()}
     />
     <h2>Nucléotide</h2>
     <Fragmentation
       sequence={nucleotide.sequence}
       analysisInfo={nucleotide.analysisInfo}
       options={nucleotide.options}
-      key={`fragmentation-nucl-${generateReactKey('')}`}
+      key={uuid()}
     />
   </>,
 );

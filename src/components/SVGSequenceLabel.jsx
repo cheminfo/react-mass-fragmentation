@@ -6,7 +6,7 @@ export function SVGSequenceLabel({
   options,
 }) {
   const { labelFontFamily = 'Verdana', labelSize = 12 } = options;
-  const fontSize = String((2 * Number(labelSize)) / 3);
+  const fontSize = (2 * Number(labelSize)) / 3;
   return (
     <>
       <text
