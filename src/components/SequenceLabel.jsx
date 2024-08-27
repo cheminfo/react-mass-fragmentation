@@ -22,14 +22,17 @@ export function SequenceLabel({
         fill={textColor}
         fontFamily={labelFontFamily}
         fontSize={fontSize / 2}
+        fontWeight="normal"
         y={-(fontSize / 2)}
       >
+        {charge < 0 ? '' : '+'}
         {charge}
       </text>
       <text
         fill={textColor}
         fontFamily={labelFontFamily}
         fontSize={fontSize / 2}
+        fontWeight="normal"
       >
         {similarity}
       </text>

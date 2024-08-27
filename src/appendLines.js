@@ -67,7 +67,7 @@ export function appendLines(data, options) {
         data.results.internals.filter(
           (internal) =>
             internal.from >= i * nbElementByLine ||
-            internal.to <= (i + 1) * nbElementByLine,
+            internal.to >= i * nbElementByLine,
         ),
       ),
     };
