@@ -92,7 +92,6 @@ export function appendLines(data, options) {
   updatePositionOnLine(lines);
 
   if (Object.keys(data.residues.replacements).length !== 0) {
-    console.log('YES : ', Object.keys(data.residues.replacements).length);
     const replacementsNumber = Object.keys(data.residues.replacements).length;
     const legend = {
       y: data.height + spaceBetweenInternalLines,

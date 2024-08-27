@@ -1,4 +1,4 @@
-export function SVGSequenceLabel({
+export function SequenceLabel({
   label,
   charge,
   similarity,

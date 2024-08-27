@@ -5,10 +5,10 @@ import { appendLines } from '../appendLines.js';
 import { appendResidues } from '../appendResidues.js';
 import { appendResults, sortResults } from '../appendResults.js';
 
-import { SVGLegend } from './SVGLegend.jsx';
-import { SVGSequence } from './SVGSequence.jsx';
-import { SVGSequenceFragment } from './SVGSequenceFragment.jsx';
-import { SVGSequenceInternals } from './SVGSequenceInternals.jsx';
+import { Legend } from './Legend.jsx';
+import { Sequence } from './Sequence.jsx';
+import { SequenceFragment } from './SequenceFragment.jsx';
+import { SequenceInternals } from './SequenceInternals.jsx';
 
 function maxSequenceBreakAbove(internals) {
   let max = 0;
@@ -25,11 +25,11 @@ function initMassFragmentationData(sequence, analysisResults, options = {}) {
   appendResults(data, analysisResults, { merge, filter });
   sortResults(data);
   appendLines(data, options);
-  console.log(data);
+  // console.log(data);
   return data;
 }
 
-export function SVGMassFragmentation({ sequence, analysisInfo, options }) {
+export function MassFragmentation({ sequence, analysisInfo, options }) {
   const {
     leftRightBorders = 50,
     spaceBetweenResidues = 30,
@@ -54,7 +54,7 @@ export function SVGMassFragmentation({ sequence, analysisInfo, options }) {
             key={uuid()}
           >
             <g fontSize={12} key={uuid()}>
-              <SVGSequence
+              <Sequence
                 sequence={line.residues}
                 options={options}
                 key={uuid()}
@@ -67,7 +67,7 @@ export function SVGMassFragmentation({ sequence, analysisInfo, options }) {
               transform={`translate(${leftRightBorders + 1.5 * spaceBetweenResidues})`}
               key={uuid()}
             >
-              <SVGSequenceFragment
+              <SequenceFragment
                 fragments={line.fragments}
                 options={options}
                 key={uuid()}
@@ -83,7 +83,7 @@ export function SVGMassFragmentation({ sequence, analysisInfo, options }) {
               })`}
               key={uuid()}
             >
-              <SVGSequenceInternals
+              <SequenceInternals
                 internals={line.internals}
                 options={options}
                 key={uuid()}
@@ -100,7 +100,7 @@ export function SVGMassFragmentation({ sequence, analysisInfo, options }) {
               transform={`translate(0 ${index * spaceBetweenInternalLines})`}
               key={uuid()}
             >
-              <SVGLegend legend={label} options={options} key={uuid()} />
+              <Legend legend={label} options={options} key={uuid()} />
             </g>
           ))}
         </g>

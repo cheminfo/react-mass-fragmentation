@@ -1,16 +1,16 @@
 import { v4 as uuid } from 'uuid';
 
-import { SVGInternal } from './SVGInternal';
+import { Internal } from './Internal';
 
-export function SVGSequenceInternals({ internals, options }) {
+export function SequenceInternals({ internals, options }) {
   let indexInternal = 0;
   return (
     <>
-      {internals.map((internal, index) => {
+      {internals.map((internal) => {
         let iI = indexInternal;
         indexInternal += internal.members.length;
         return (
-          <SVGInternal
+          <Internal
             internal={internal}
             indexInternal={iI}
             options={options}

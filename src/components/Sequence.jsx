@@ -11,7 +11,7 @@ function elementColor(element) {
   }
 }
 
-export function SVGSequence({ sequence, options }) {
+export function Sequence({ sequence, options }) {
   const { leftRightBorders = 50, spaceBetweenResidues = 30 } = options;
   return (
     <>

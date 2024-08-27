@@ -1,8 +1,8 @@
 import { v4 as uuid } from 'uuid';
 
-import { SVGSequenceLabel } from './SVGSequenceLabel';
+import { SequenceLabel } from './SequenceLabel';
 
-export function SVGSequenceFragment({ fragments, options }) {
+export function SequenceFragment({ fragments, options }) {
   const {
     spaceBetweenResidues = 30,
     spaceBetweenInternalLines = 12,
@@ -29,7 +29,7 @@ export function SVGSequenceFragment({ fragments, options }) {
               transform={`translate(${fragment.fromBegin ? 0 : 8} ${fragment.fromBegin ? 2 + (index + 1) * spaceBetweenInternalLines : -15 - index * spaceBetweenInternalLines})`}
               key={uuid()}
             >
-              <SVGSequenceLabel
+              <SequenceLabel
                 label={member.type}
                 charge={member.charge}
                 similarity={Math.trunc(member.similarity * 100)}

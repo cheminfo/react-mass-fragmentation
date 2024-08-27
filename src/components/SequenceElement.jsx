@@ -1,4 +1,4 @@
-export function SVGSequenceElement({ element, index, options }) {
+export function SequenceElement({ element, index, options }) {
   const {
     leftRightBorders = 50,
     spaceBetweenResidues = 30,

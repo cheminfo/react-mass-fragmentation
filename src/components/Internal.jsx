@@ -1,9 +1,9 @@
 import React from 'react';
 import { v4 as uuid } from 'uuid';
 
-import { SVGSequenceLabel } from './SVGSequenceLabel';
+import { SequenceLabel } from './SequenceLabel';
 
-export function SVGInternal({ internal, indexInternal, options }) {
+export function Internal({ internal, indexInternal, options }) {
   const {
     leftRightBorders = 50,
     spaceBetweenResidues = 30,
@@ -36,7 +36,7 @@ export function SVGInternal({ internal, indexInternal, options }) {
                 transform={`translate(${(xEnd - xStart) / 2} ${-strokeWidth - 1})`}
                 key={uuid()}
               >
-                <SVGSequenceLabel
+                <SequenceLabel
                   label={member.type}
                   charge={member.charge}
                   similarity={Math.trunc(member.similarity * 100)}

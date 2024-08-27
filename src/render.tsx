@@ -1,7 +1,7 @@
 import { flushSync } from 'react-dom';
 import { createRoot } from 'react-dom/client';
 
-import { SVGMassFragmentation } from './components/SVGMassFragmentation';
+import { SVGMassFragmentation } from './components/MassFragmentation';
 
 export function render(sequence, info, options) {
   const element = (
