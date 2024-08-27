@@ -90,5 +90,22 @@ export function appendLines(data, options) {
     lastHeightBelow = line.heightBelow;
   }
   updatePositionOnLine(lines);
+
+  if (Object.keys(data.residues.replacements).length !== 0) {
+    console.log('YES : ', Object.keys(data.residues.replacements).length);
+    const replacementsNumber = Object.keys(data.residues.replacements).length;
+    const legend = {
+      y: data.height + spaceBetweenInternalLines,
+      labels: [],
+    };
+    for (let replacement in data.residues.replacements) {
+      legend.labels.push(
+        `${data.residues.replacements[replacement].label} = ${replacement}`,
+      );
+    }
+    data.height += (replacementsNumber + 1) * spaceBetweenInternalLines;
+    data.legend = legend;
+  }
+
   data.lines = lines;
 }

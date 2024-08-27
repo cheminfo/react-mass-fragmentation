@@ -23,16 +23,17 @@ export function SVGSequenceFragment({ fragments, options }) {
             stroke={fragment.color}
             strokeWidth={strokeWidth}
           />
-          {fragment.members.map((m, index) => (
+          {fragment.members.map((member, index) => (
             <g
-              transform={`translate(0 ${fragment.fromBegin ? 2 + (index + 1) * spaceBetweenInternalLines : -15 - index * spaceBetweenInternalLines})`}
+              // transform={`translate(0 ${fragment.fromBegin ? 2 + (index + 1) * spaceBetweenInternalLines : -15 - index * spaceBetweenInternalLines})`}
+              transform={`translate(${fragment.fromBegin ? 0 : 8} ${fragment.fromBegin ? 2 + (index + 1) * spaceBetweenInternalLines : -15 - index * spaceBetweenInternalLines})`}
               key={uuid()}
             >
               <SVGSequenceLabel
-                label={m.type}
-                charge={m.charge}
-                similarity={Math.trunc(m.similarity * 100)}
-                textColor={m.textColor}
+                label={member.type}
+                charge={member.charge}
+                similarity={Math.trunc(member.similarity * 100)}
+                textColor={member.textColor}
                 options={options}
                 key={uuid()}
               />

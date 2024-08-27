@@ -5,6 +5,7 @@ import { appendLines } from '../appendLines.js';
 import { appendResidues } from '../appendResidues.js';
 import { appendResults, sortResults } from '../appendResults.js';
 
+import { SVGLegend } from './SVGLegend.jsx';
 import { SVGSequence } from './SVGSequence.jsx';
 import { SVGSequenceFragment } from './SVGSequenceFragment.jsx';
 import { SVGSequenceInternals } from './SVGSequenceInternals.jsx';
@@ -24,6 +25,7 @@ function initMassFragmentationData(sequence, analysisResults, options = {}) {
   appendResults(data, analysisResults, { merge, filter });
   sortResults(data);
   appendLines(data, options);
+  console.log(data);
   return data;
 }
 
@@ -90,6 +92,21 @@ export function SVGMassFragmentation({ sequence, analysisInfo, options }) {
           </g>
         </React.Fragment>
       ))}
+
+      {data.legend ? (
+        <g transform={`translate(${leftRightBorders} ${data.legend.y})`}>
+          {data.legend.labels.map((label, index) => (
+            <g
+              transform={`translate(0 ${index * spaceBetweenInternalLines})`}
+              key={uuid()}
+            >
+              <SVGLegend legend={label} options={options} key={uuid()} />
+            </g>
+          ))}
+        </g>
+      ) : (
+        <g />
+      )}
     </svg>
   );
 }
