@@ -1480,7 +1480,7 @@ const info = [
   },
 ];
 
-const analysisInfo = info.filter((entry) => !entry.type.includes('B'));
+const analysisResults = info.filter((entry) => !entry.type.includes('B'));
 
 let options = {
   width: 250,
@@ -1497,6 +1497,6 @@ let sequence = 'ACGGCTT(C8H14N2O)AGG';
 
 export const bigNucleotide = {
   sequence,
-  analysisInfo,
+  analysisResults,
   options,
 };

@@ -19,21 +19,11 @@ function maxSequenceBreakAbove(internals) {
 /**
  * @param {object} props
  * @param {string} props.sequence
- * @param {object} props.analysisInfo
- * @param {object} props.options
- * @param {number} [props.options.leftRightBorders=50]
- * @param {string} [props.options.labelFontFamily='Verdana']
- * @param {number} [props.options.labelSize=12]
- * @param {number} [props.options.spaceBetweenResidues=30]
- * @param {number} [props.options.spaceBetweenInternalLines=12]
- * @param {number} [props.options.strokeWidth=2]
- * @param {number} [props.options.width=600]
- * @param {object} [props.options.parsing={}]
- * @param {object} [props.options.merge={}]
- * @param {object} [props.options.filter={}]
+ * @param {object} props.analysisResults
+ * @param {import('../sequenceSVG.js').SequenceSVGOptions} props.options
  * @returns {JSX.Element}
  */
-export function MassFragmentation({ sequence, analysisInfo, options }) {
+export function MassFragmentation({ sequence, analysisResults, options }) {
   const realOptions = getOptionsWithDefault(options);
   const {
     labelFontFamily,
@@ -44,8 +34,11 @@ export function MassFragmentation({ sequence, analysisInfo, options }) {
     strokeWidth,
     width,
   } = realOptions;
-
-  const data = initMassFragmentationData(sequence, analysisInfo, realOptions);
+  const data = initMassFragmentationData(
+    sequence,
+    analysisResults,
+    realOptions,
+  );
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

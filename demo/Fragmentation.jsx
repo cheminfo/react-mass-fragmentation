@@ -2,7 +2,7 @@ import { v4 as uuid } from 'uuid';
 
 import { MassFragmentation } from '../src/components/MassFragmentation';
 
-export default function Fragmentation({ sequence, analysisInfo, options }) {
+export default function Fragmentation({ sequence, analysisResults, options }) {
   return (
     <div
       style={{
@@ -13,7 +13,7 @@ export default function Fragmentation({ sequence, analysisInfo, options }) {
     >
       <MassFragmentation
         sequence={sequence}
-        analysisInfo={analysisInfo}
+        analysisResults={analysisResults}
         options={options}
         key={uuid()}
       />

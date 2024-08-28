@@ -1,6 +1,6 @@
 let sequence = 'AGGCAG';
 
-let analysisInfo = [
+let analysisResults = [
   { type: '-B4', similarity: 0.97, charge: -3 },
   { type: '-B4', similarity: 0.96, charge: -2 },
   { type: 'w1', similarity: 0.93, charge: -1 },
@@ -59,6 +59,6 @@ let options = {
 
 export const nucleotide = {
   sequence,
-  analysisInfo,
+  analysisResults,
   options,
 };

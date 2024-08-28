@@ -1,7 +1,7 @@
 const sequence =
   '(Me)MQIFVKTLTGKT(OEt)IT(OMe)LEVEPSD(NH2)TIENVKAKIQD(NH2)KEGIPPDQQ(OMe)';
 
-const analysisInfo = [
+const analysisResults = [
   { type: 'b38y33', similarity: 0.9012, charge: 3 },
   { type: 'b30y30', similarity: 0.8686, charge: 3 },
   { type: 'b40y40', similarity: 0.869, charge: 2 },
@@ -34,6 +34,6 @@ const options = {
 
 export const peptide = {
   sequence,
-  analysisInfo,
+  analysisResults,
   options,
 };
