@@ -26,7 +26,7 @@ export function SequenceLabel({
           fontWeight="normal"
           y={-(fontSize / 2)}
         >
-          {charge < 0 ? charge : `+ ${charge}`}
+          {charge < 0 ? charge : `+${charge}`}
         </text>
       ) : (
         ''
