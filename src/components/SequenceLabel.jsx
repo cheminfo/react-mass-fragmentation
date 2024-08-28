@@ -5,7 +5,7 @@ export function SequenceLabel({
   textColor,
   options,
 }) {
-  const { labelFontFamily = 'Verdana', labelSize = 12 } = options;
+  const { labelFontFamily = 'Verdana', labelSize } = options;
   const fontSize = (2 * Number(labelSize)) / 3;
   return (
     <>
@@ -18,16 +18,19 @@ export function SequenceLabel({
       >
         {label}
       </text>
-      <text
-        fill={textColor}
-        fontFamily={labelFontFamily}
-        fontSize={fontSize / 2}
-        fontWeight="normal"
-        y={-(fontSize / 2)}
-      >
-        {charge < 0 ? '' : '+'}
-        {charge}
-      </text>
+      {!(charge === '') ? (
+        <text
+          fill={textColor}
+          fontFamily={labelFontFamily}
+          fontSize={fontSize / 2}
+          fontWeight="normal"
+          y={-(fontSize / 2)}
+        >
+          {charge < 0 ? charge : `+ ${charge}`}
+        </text>
+      ) : (
+        ''
+      )}
       <text
         fill={textColor}
         fontFamily={labelFontFamily}

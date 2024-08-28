@@ -30,8 +30,8 @@ function updatePositionOnLine(lines) {
       internal.from =
         internal.from < lines[i].from ? -1 : internal.from - lines[i].from;
       internal.to =
-        internal.to > lines[i].to
-          ? lines[i].to + 1
+        internal.to >= lines[i].to
+          ? Infinity //lines[i].to + 1
           : internal.to - lines[i].from;
     }
   }

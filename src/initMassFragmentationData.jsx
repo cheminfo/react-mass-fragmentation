@@ -36,6 +36,6 @@ export function initMassFragmentationData(sequence, analysisResults, options) {
     spaceBetweenResidues,
     spaceBetweenInternalLines,
   });
-  // console.log(data);
+  console.log(data);
   return data;
 }
