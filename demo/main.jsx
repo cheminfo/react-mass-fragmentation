@@ -6,7 +6,7 @@ import Fragmentation from './Fragmentation';
 import { nucleotide } from './data/nucleotide';
 import { peptide } from './data/peptide';
 
-const root = createRoot(document.getElementById('root'));
+const root = createRoot(document.querySelector('#root'));
 root.render(
   <>
     <h2>Peptide</h2>

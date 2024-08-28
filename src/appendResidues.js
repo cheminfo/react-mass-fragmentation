@@ -29,8 +29,8 @@ export function appendResidues(data, sequence, options = {}) {
   }
 
   /**
- * @type {{begin: string, end: string, residues: string[]}}
- */
+   * @type {{begin: string, end: string, residues: string[]}}
+   */
   const result = {
     begin: '',
     end: '',
@@ -60,7 +60,7 @@ export function appendResidues(data, sequence, options = {}) {
 
     if (
       state === STATE_MIDDLE &&
-      !sequence.substring(i).match(/[A-Z][a-z][a-z]/) &&
+      !sequence.slice(Math.max(0, i)).match(/[A-Z][a-z]{2}/) &&
       !currentChar.match(/[a-z]/) &&
       parenthesisLevel === 0
     ) {
@@ -80,7 +80,7 @@ export function appendResidues(data, sequence, options = {}) {
         break;
       case STATE_MIDDLE:
         result.residues[result.residues.length - 1] =
-          result.residues[result.residues.length - 1] + currentChar;
+          result.residues.at(-1) + currentChar;
         break;
       case STATE_END:
         result.end = result.end + currentChar;
@@ -108,7 +108,7 @@ export function appendResidues(data, sequence, options = {}) {
       },
       fromBegin: i + 1,
       fromEnd: result.residues.length - i,
-      kind: 'residue'
+      kind: 'residue',
     };
     if (label.includes('(')) {
       getModifiedReplacement(label, residue, alternatives, replacements);
@@ -143,12 +143,12 @@ export function appendResidues(data, sequence, options = {}) {
 
   result.all = [result.begin].concat(result.residues, [result.end]);
 
-  result.all.forEach((entry) => {
+  for (const entry of result.all) {
     entry.info = {
       nbOver: 0,
       nbUnder: 0,
     };
-  });
+  }
 
   data.residues = result;
 }
@@ -173,9 +173,9 @@ function getModifiedReplacement(
 ) {
   if (!replacements[modifiedResidue]) {
     let position = modifiedResidue.indexOf('(');
-    let residueCode = modifiedResidue.substring(0, position);
+    let residueCode = modifiedResidue.slice(0, Math.max(0, position));
     let modification = removeStartEndParenthesis(
-      modifiedResidue.substring(position),
+      modifiedResidue.slice(Math.max(0, position)),
     );
 
     if (
@@ -209,8 +209,8 @@ function getModifiedReplacement(
  * @returns {string}
  */
 function removeStartEndParenthesis(mf) {
-  if (mf[0] === '(' && mf[mf.length - 1] === ')') {
-    return mf.substring(1, mf.length - 1);
+  if (mf[0] === '(' && mf.at(-1) === ')') {
+    return mf.slice(1, -1);
   }
   return mf;
 }

@@ -38,12 +38,20 @@ function updatePositionOnLine(lines) {
   return lines;
 }
 
+/**
+ * @param {object} data
+ * @param {object} options
+ * @param {number} options.width
+ * @param {number} options.leftRightBorders
+ * @param {number} options.spaceBetweenResidues
+ * @param {number} options.spaceBetweenInternalLines
+ */
 export function appendLines(data, options) {
   const {
-    width = 600,
-    leftRightBorders = 50,
-    spaceBetweenResidues = 30,
-    spaceBetweenInternalLines = 12,
+    width,
+    leftRightBorders,
+    spaceBetweenResidues,
+    spaceBetweenInternalLines,
   } = options;
   const usefulWidth = width - 2 * leftRightBorders;
   const nbElementByLine = Math.trunc(usefulWidth / spaceBetweenResidues);
@@ -91,7 +99,7 @@ export function appendLines(data, options) {
   }
   updatePositionOnLine(lines);
 
-  if (Object.keys(data.residues.replacements).length !== 0) {
+  if (Object.keys(data.residues.replacements).length > 0) {
     const replacementsNumber = Object.keys(data.residues.replacements).length;
     const legend = {
       y: data.height + spaceBetweenInternalLines,

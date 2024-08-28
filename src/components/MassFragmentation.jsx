@@ -1,9 +1,7 @@
 import React from 'react';
 import { v4 as uuid } from 'uuid';
 
-import { appendLines } from '../appendLines.js';
-import { appendResidues } from '../appendResidues.js';
-import { appendResults, sortResults } from '../appendResults.js';
+import { initMassFragmentationData } from '../initMassFragmentationData.jsx';
 
 import { Legend } from './Legend.jsx';
 import { Sequence } from './Sequence.jsx';
@@ -18,31 +16,40 @@ function maxSequenceBreakAbove(internals) {
   return max;
 }
 
-function initMassFragmentationData(sequence, analysisResults, options = {}) {
-  const { parsing, merge, filter } = options;
-  const data = {};
-  appendResidues(data, sequence, parsing);
-  appendResults(data, analysisResults, { merge, filter });
-  sortResults(data);
-  appendLines(data, options);
-  // console.log(data);
-  return data;
-}
-
+/**
+ * @param {object} props
+ * @param {string} props.sequence
+ * @param {object} props.analysisInfo
+ * @param {object} props.options
+ * @param {number} [props.options.leftRightBorders=50]
+ * @param {string} [props.options.labelFontFamily='Verdana']
+ * @param {number} [props.options.labelSize=12]
+ * @param {number} [props.options.spaceBetweenResidues=30]
+ * @param {number} [props.options.spaceBetweenInternalLines=12]
+ * @param {number} [props.options.strokeWidth=2]
+ * @param {number} [props.options.width=600]
+ * @param {object} [props.options.parsing={}]
+ * @param {object} [props.options.merge={}]
+ * @param {object} [props.options.filter={}]
+ * @returns {JSX.Element}
+ */
 export function MassFragmentation({ sequence, analysisInfo, options }) {
+  const realOptions = getOptionsWithDefault(options);
   const {
-    leftRightBorders = 50,
-    spaceBetweenResidues = 30,
-    spaceBetweenInternalLines = 12,
-    strokeWidth = 2,
-    labelFontFamily = 'Verdana',
-    labelSize = 12,
-  } = options;
-  const data = initMassFragmentationData(sequence, analysisInfo, options);
+    labelFontFamily,
+    labelSize,
+    leftRightBorders,
+    spaceBetweenResidues,
+    spaceBetweenInternalLines,
+    strokeWidth,
+    width,
+  } = realOptions;
+
+  const data = initMassFragmentationData(sequence, analysisInfo, realOptions);
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox={`0 0 ${options.width} ${data.height}`}
+      viewBox={`0 0 ${width} ${data.height}`}
       key={uuid()}
     >
       {data.lines.map((line) => (
@@ -56,7 +63,7 @@ export function MassFragmentation({ sequence, analysisInfo, options }) {
             <g fontSize={12} key={uuid()}>
               <Sequence
                 sequence={line.residues}
-                options={options}
+                options={realOptions}
                 key={uuid()}
               />
             </g>
@@ -69,7 +76,7 @@ export function MassFragmentation({ sequence, analysisInfo, options }) {
             >
               <SequenceFragment
                 fragments={line.fragments}
-                options={options}
+                options={realOptions}
                 key={uuid()}
               />
             </g>
@@ -85,7 +92,7 @@ export function MassFragmentation({ sequence, analysisInfo, options }) {
             >
               <SequenceInternals
                 internals={line.internals}
-                options={options}
+                options={realOptions}
                 key={uuid()}
               />
             </g>
@@ -100,7 +107,7 @@ export function MassFragmentation({ sequence, analysisInfo, options }) {
               transform={`translate(0 ${index * spaceBetweenInternalLines})`}
               key={uuid()}
             >
-              <Legend legend={label} options={options} key={uuid()} />
+              <Legend legend={label} options={realOptions} key={uuid()} />
             </g>
           ))}
         </g>
@@ -109,4 +116,20 @@ export function MassFragmentation({ sequence, analysisInfo, options }) {
       )}
     </svg>
   );
+}
+
+function getOptionsWithDefault(options) {
+  return {
+    labelFontFamily: 'Verdana',
+    labelSize: 12,
+    leftRightBorders: 50,
+    spaceBetweenResidues: 30,
+    spaceBetweenInternalLines: 12,
+    strokeWidth: 2,
+    width: 600,
+    parsing: {},
+    merge: {},
+    filter: {},
+    ...options,
+  };
 }

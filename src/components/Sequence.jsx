@@ -12,7 +12,7 @@ function elementColor(element) {
 }
 
 export function Sequence({ sequence, options }) {
-  const { leftRightBorders = 50, spaceBetweenResidues = 30 } = options;
+  const { leftRightBorders, spaceBetweenResidues } = options;
   return (
     <>
       {sequence.map((element, index) => (

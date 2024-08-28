@@ -5,10 +5,10 @@ import { SequenceLabel } from './SequenceLabel';
 
 export function Internal({ internal, indexInternal, options }) {
   const {
-    leftRightBorders = 50,
-    spaceBetweenResidues = 30,
-    spaceBetweenInternalLines = 12,
-    strokeWidth = 2,
+    leftRightBorders,
+    spaceBetweenResidues,
+    spaceBetweenInternalLines,
+    strokeWidth,
   } = options;
   const xStart =
     internal.from === -1
