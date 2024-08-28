@@ -1,6 +1,6 @@
 {
   "name": "react-mass-fragmentation",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "React component to display mass fragmentation of peptides and nucleotides",
   "main": "lib/index.js",
   "module": "lib-esm/index.js",
