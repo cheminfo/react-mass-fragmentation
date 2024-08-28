@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-import { SVGMassFragmentation } from '../src/components/SVGMassFragmentation';
+import { MassFragmentation } from '../src/components/MassFragmentation';
 
 export default function Fragmentation({ sequence, analysisInfo, options }) {
   return (
@@ -11,7 +11,7 @@ export default function Fragmentation({ sequence, analysisInfo, options }) {
       }}
       key={uuid()}
     >
-      <SVGMassFragmentation
+      <MassFragmentation
         sequence={sequence}
         analysisInfo={analysisInfo}
         options={options}
