@@ -1,4 +1,4 @@
-import { test, expect } from 'vitest';
+import { expect, test } from 'vitest';
 
 import { sequenceSVG } from '../sequenceSVG.tsx';
 
@@ -38,6 +38,7 @@ test('render: Molecule', () => {
   };
 
   const svg = sequenceSVG(sequence, analysisResults, options);
-  expect(svg).toHaveLength(13754);
+
+  expect(svg).toHaveLength(13328);
   expect(svg).toMatchSnapshot();
 });

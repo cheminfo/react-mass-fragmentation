@@ -8,13 +8,11 @@ const SYMBOLS = ['Θ', 'Δ', 'Λ', 'Φ', 'Ω', 'Γ', 'Χ'];
 let currentSymbol = 0;
 
 /**
- * Code that allows to split a sequence of amino acids or nucleotides natural or non natural
- * @param {object} data
- * @param {string} sequence
- * @param {object} [options={}]
- * @param {'peptide'|'rna'|'ds-dna'|'dna'} [options.kind] - peptide, rna, ds-dna or dna. Default if contains U: rna, otherwise ds-dna
- * @param {'alcohol'|'monophosphate'|'diphosphate'|'triphosphate'} [options.fivePrime=monophosphate] - alcohol, monophosphate, diphosphate, triphosphate
- * @param {string} [options.circular=false]
+ * Split a sequence of amino acids or nucleotides, natural or non natural,
+ * and populate `data.residues` with the resulting residue list.
+ * @param {import('./types.js').MassFragmentationData} data - Data object mutated in place.
+ * @param {string} sequence - Sequence to parse.
+ * @param {import('./types.js').ParsingOptions} [options] - Parsing options.
  */
 export function appendResidues(data, sequence, options = {}) {
   const { kind = 'peptide' } = options;
@@ -28,14 +26,17 @@ export function appendResidues(data, sequence, options = {}) {
     sequence = Nucleotide.sequenceToMF(sequence, options);
   }
 
-  /**
-   * @type {{begin: string, end: string, residues: string[]}}
-   */
+  /* eslint-disable jsdoc/reject-any-type -- result is gradually refined from strings to structured objects, using `any` keeps the body readable */
+  /** @type {any} */
   const result = {
     begin: '',
     end: '',
     residues: [],
+    alternatives: {},
+    replacements: {},
+    all: [],
   };
+  /* eslint-enable jsdoc/reject-any-type */
 
   const STATE_BEGIN = 0;
   const STATE_MIDDLE = 1;
@@ -205,8 +206,9 @@ function getModifiedReplacement(
 }
 
 /**
- * @param {string} mf - molecular formula
- * @returns {string}
+ * Strip a single pair of enclosing parentheses from a molecular formula.
+ * @param {string} mf - Molecular formula that may be wrapped in parentheses.
+ * @returns {string} The formula without its outer parentheses, if any.
  */
 function removeStartEndParenthesis(mf) {
   if (mf[0] === '(' && mf.at(-1) === ')') {

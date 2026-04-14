@@ -1,7 +1,19 @@
 import { v4 as uuid } from 'uuid';
 
-import { SequenceLabel } from './SequenceLabel';
+import { SequenceLabel } from './SequenceLabel.js';
 
+/**
+ * @typedef {import('../types.js').Fragment} Fragment
+ * @typedef {import('../types.js').ResolvedOptions} ResolvedOptions
+ */
+
+/**
+ * Render the terminal fragments (starting from begin or end) for a sequence line.
+ * @param {object} props - Component props.
+ * @param {Fragment[]} props.fragments - Fragments to display.
+ * @param {ResolvedOptions} props.options - Rendering options.
+ * @returns {import('react').JSX.Element} The rendered fragment markers and labels.
+ */
 export function SequenceFragment({ fragments, options }) {
   const {
     spaceBetweenResidues = 30,
@@ -25,7 +37,6 @@ export function SequenceFragment({ fragments, options }) {
           />
           {fragment.members.map((member, index) => (
             <g
-              // transform={`translate(0 ${fragment.fromBegin ? 2 + (index + 1) * spaceBetweenInternalLines : -15 - index * spaceBetweenInternalLines})`}
               transform={`translate(${fragment.fromBegin ? 0 : 8} ${fragment.fromBegin ? 2 + (index + 1) * spaceBetweenInternalLines : -15 - index * spaceBetweenInternalLines})`}
               key={uuid()}
             >

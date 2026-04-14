@@ -1,88 +1,28 @@
 import { flushSync } from 'react-dom';
 import { createRoot } from 'react-dom/client';
 
-import { MassFragmentation } from './components/MassFragmentation';
+import { MassFragmentation } from './components/MassFragmentation.js';
+import type { AnalysisResult, SequenceSVGOptions } from './types.js';
 
-export interface SequenceSVGOptions {
-  /**
-   * @default 50
-   */
-  leftRightBorders?: number;
+export type { SequenceSVGOptions } from './types.js';
 
-  /**
-   * @default 600
-   */
-  width?: number;
-
-  /**
-   * @default 30
-   */
-  spaceBetweenResidues?: number;
-
-  /**
-   * @default 12
-   */
-  spaceBetweenInternalLines?: number;
-
-  /**
-   * @default 2
-   */
-  strokeWidth?: number;
-
-  /**
-   * @default 'Verdana'
-   */
-  labelFontFamily?: string;
-
-  /**
-   * @default 8
-   */
-  labelSize?: number;
-
-  /**
-   * Sequence parsing options
-   */
-  parsing?: Record<string, any>;
-  merge?: {
-    /**
-     * Merge results if only differs by a charge
-     */
-    charge?: boolean;
-  };
-  filter?: {
-    /**
-     * @default 0
-     */
-    minSimilarity?: number;
-
-    /**
-     * @default 0
-     */
-    minQuantity?: number;
-
-    /**
-     * minimal relative quantity. This value should be between 0 and 1 and supersede minQuantity.
-     * @default 0
-     */
-    minRelativeQuantity?: number;
-
-    /**
-     * @default true
-     */
-    showInternals?: boolean;
-  };
-}
-
+/**
+ * Render a sequence with its fragmentation results to an SVG string.
+ * @param sequence - Peptide or nucleotide sequence.
+ * @param analysisResults - Raw analysis results to display on the sequence.
+ * @param options - Rendering and parsing options.
+ * @returns The SVG markup as a string.
+ */
 export function sequenceSVG(
   sequence: string,
-  analysisResults,
-  options: SequenceSVGOptions,
+  analysisResults: AnalysisResult[],
+  options: SequenceSVGOptions = {},
 ): string {
   const element = (
     <MassFragmentation
       sequence={sequence}
       analysisResults={analysisResults}
-      {...options}
+      options={options}
     />
   );
   const div = document.createElement('div');

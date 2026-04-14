@@ -2,56 +2,55 @@
   "name": "react-mass-fragmentation",
   "version": "0.0.1",
   "description": "React component to display mass fragmentation of peptides and nucleotides",
-  "main": "lib/index.js",
-  "module": "lib-esm/index.js",
-  "types": "lib-esm/index.d.ts",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.js"
+  },
   "files": [
     "lib",
-    "lib-esm",
     "src"
   ],
   "scripts": {
+    "build": "npm run tsc && cheminfo-build --entry lib/index.js --root MassSequenceSVG",
     "check-types": "tsc --noEmit",
-    "build": "npm run tsc-esm && cheminfo-build --entry lib-esm/index.js --root MassSequenceSVG",
+    "clean": "rm -rf lib",
     "dev": "vite",
-    "clean": "rimraf lib lib-esm",
-    "prettier": "prettier --check src demo",
-    "prettier-write": "prettier --write src demo",
-    "preview": "vite preview",
     "eslint": "eslint src demo",
     "eslint-fix": "npm run eslint -- --fix",
     "prepack": "npm run tsc",
-    "tsc": "npm run clean && npm run tsc-cjs && npm run tsc-esm",
-    "tsc-cjs": "tsc --project tsconfig.cjs.json",
-    "tsc-esm": "tsc --project tsconfig.esm.json",
+    "prettier": "prettier --check src demo",
+    "prettier-write": "prettier --write src demo",
+    "preview": "vite preview",
     "test": "vitest && npm run eslint && npm run prettier && npm run check-types",
-    "test-only": "vitest "
+    "test-only": "vitest",
+    "tsc": "npm run clean && tsc --project tsconfig.build.json"
   },
   "peerDependencies": {
     "react": ">=18.2.0",
     "react-dom": ">=18.2.0"
   },
   "dependencies": {
-    "chemical-groups": "^2.2.1",
-    "mf-utilities": "^3.2.3",
-    "nucleotide": "^3.1.4",
-    "peptide": "^2.2.2",
-    "uuid": "^10.0.0"
+    "chemical-groups": "^2.2.3",
+    "mf-utilities": "^3.5.4",
+    "nucleotide": "^3.2.14",
+    "peptide": "^2.3.14",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
-    "@types/react": "^18.3.4",
-    "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.1",
-    "cheminfo-build": "^1.2.0",
-    "eslint": "^8.57.0",
-    "eslint-config-cheminfo-react": "^13.0.0",
-    "eslint-config-cheminfo-typescript": "^15.0.1",
-    "jsdom": "^25.0.0",
-    "prettier": "^3.3.3",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "typescript": "^5.5.4",
-    "vite": "^5.4.2",
-    "vitest": "^2.0.5"
+    "@types/node": "^25.6.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "cheminfo-build": "^1.3.2",
+    "eslint": "^9.19.0",
+    "eslint-config-cheminfo-react": "^19.2.0",
+    "eslint-config-cheminfo-typescript": "^21.2.0",
+    "jsdom": "^29.0.2",
+    "prettier": "^3.8.2",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "typescript": "^5.8.3",
+    "vite": "^8.0.8",
+    "vitest": "^4.1.4"
   }
 }
