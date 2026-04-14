@@ -1,42 +1,54 @@
+import type { JSX } from 'react';
 import React from 'react';
 import { v4 as uuid } from 'uuid';
 
 import { initMassFragmentationData } from '../initMassFragmentationData.js';
+import type {
+  AnalysisResult,
+  ResolvedOptions,
+  SequenceSVGOptions,
+} from '../types.js';
 
 import { Legend } from './Legend.js';
 import { Sequence } from './Sequence.js';
 import { SequenceFragment } from './SequenceFragment.js';
 import { SequenceInternals } from './SequenceInternals.js';
 
-/**
- * @typedef {import('../types.js').SequenceSVGOptions} SequenceSVGOptions
- * @typedef {import('../types.js').ResolvedOptions} ResolvedOptions
- * @typedef {import('../types.js').AnalysisResult} AnalysisResult
- * @typedef {import('../types.js').Internal} Internal
- */
+interface MassFragmentationProps {
+  /** Peptide or nucleotide sequence. */
+  sequence: string;
+  /** Raw analysis results to display. */
+  analysisResults: AnalysisResult[];
+  /** Rendering and parsing options. */
+  options: SequenceSVGOptions;
+}
 
 /**
- * Compute the maximum number of members across all internal fragments.
- * @param {Internal[]} internals - Internal fragments of a sequence line.
- * @returns {number} The size of the largest `members` array.
+ * Compute the maximum number of members across the given items.
+ * @param items - Fragments or internals, any object with a `members` array.
+ * @returns The size of the largest `members` array.
  */
-function maxSequenceBreakAbove(internals) {
+function maxSequenceBreakAbove(items: Array<{ members: unknown[] }>): number {
   let max = 0;
-  for (const internal of internals) {
-    if (internal.members.length > max) max = internal.members.length;
+  for (const item of items) {
+    if (item.members.length > max) max = item.members.length;
   }
   return max;
 }
 
 /**
  * Main React component that renders the full mass fragmentation SVG.
- * @param {object} props - Component props.
- * @param {string} props.sequence - Peptide or nucleotide sequence.
- * @param {AnalysisResult[]} props.analysisResults - Raw analysis results to display.
- * @param {SequenceSVGOptions} props.options - Rendering and parsing options.
- * @returns {import('react').JSX.Element} The rendered SVG element.
+ * @param props - Component props.
+ * @param props.sequence - Peptide or nucleotide sequence.
+ * @param props.analysisResults - Raw analysis results to display.
+ * @param props.options - Rendering and parsing options.
+ * @returns The rendered SVG element.
  */
-export function MassFragmentation({ sequence, analysisResults, options }) {
+export function MassFragmentation({
+  sequence,
+  analysisResults,
+  options,
+}: MassFragmentationProps): JSX.Element {
   const realOptions = getOptionsWithDefault(options);
   const {
     labelFontFamily,
@@ -126,10 +138,10 @@ export function MassFragmentation({ sequence, analysisResults, options }) {
 
 /**
  * Fill in default values for rendering options.
- * @param {SequenceSVGOptions} [options] - User-provided options.
- * @returns {ResolvedOptions} The options with all defaults applied.
+ * @param options - User-provided options.
+ * @returns The options with all defaults applied.
  */
-function getOptionsWithDefault(options) {
+function getOptionsWithDefault(options: SequenceSVGOptions): ResolvedOptions {
   return {
     labelFontFamily: 'Verdana',
     labelSize: 12,

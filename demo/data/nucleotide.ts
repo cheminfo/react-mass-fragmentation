@@ -1,6 +1,8 @@
-let sequence = 'AGGCAG';
+import type { SequenceSVGOptions } from '../../src/types.js';
 
-let analysisResults = [
+const sequence = 'AGGCAG';
+
+const analysisResults = [
   { type: '-B4', similarity: 0.97, charge: -3 },
   { type: '-B4', similarity: 0.96, charge: -2 },
   { type: 'w1', similarity: 0.93, charge: -1 },
@@ -47,7 +49,7 @@ let analysisResults = [
   { type: 'w5:a5-B', similarity: 0.73, charge: -2 },
 ];
 
-let options = {
+const options: SequenceSVGOptions = {
   width: 700,
   leftRightBorders: 50,
   spaceBetweenResidues: 30,

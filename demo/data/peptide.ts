@@ -1,3 +1,5 @@
+import type { SequenceSVGOptions } from '../../src/types.js';
+
 const sequence =
   '(Me)MQIFVKTLTGKT(OEt)IT(OMe)LEVEPSD(NH2)TIENVKAKIQD(NH2)KEGIPPDQQ(OMe)';
 
@@ -22,7 +24,7 @@ const analysisResults = [
   { type: 'c38', similarity: 0.5044, charge: 2 },
 ];
 
-const options = {
+const options: SequenceSVGOptions = {
   width: 700,
   leftRightBorders: 50,
   spaceBetweenResidues: 30,

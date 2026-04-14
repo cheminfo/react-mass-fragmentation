@@ -1,6 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- result is gradually refined from strings to structured objects */
+
 import { groupsObject } from 'chemical-groups';
 import * as Nucleotide from 'nucleotide';
 import * as Peptide from 'peptide';
+
+import type {
+  MassFragmentationData,
+  ParsingOptions,
+  Replacement,
+} from './types.js';
 
 const ALTERNATIVES = ['', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹'];
 const SYMBOLS = ['Θ', 'Δ', 'Λ', 'Φ', 'Ω', 'Γ', 'Χ'];
@@ -10,25 +18,26 @@ let currentSymbol = 0;
 /**
  * Split a sequence of amino acids or nucleotides, natural or non natural,
  * and populate `data.residues` with the resulting residue list.
- * @param {import('./types.js').MassFragmentationData} data - Data object mutated in place.
- * @param {string} sequence - Sequence to parse.
- * @param {import('./types.js').ParsingOptions} [options] - Parsing options.
+ * @param data - Data object mutated in place.
+ * @param sequence - Sequence to parse.
+ * @param options - Parsing options.
  */
-export function appendResidues(data, sequence, options = {}) {
+export function appendResidues(
+  data: MassFragmentationData,
+  sequence: string,
+  options: ParsingOptions = {},
+): void {
   const { kind = 'peptide' } = options;
 
   currentSymbol = 0;
-  // we normalize the sequence to 3 letter codes
 
   if (kind === 'peptide') {
     sequence = Peptide.sequenceToMF(sequence);
   } else {
-    sequence = Nucleotide.sequenceToMF(sequence, options);
+    sequence = Nucleotide.sequenceToMF(sequence, options as never);
   }
 
-  /* eslint-disable jsdoc/reject-any-type -- result is gradually refined from strings to structured objects, using `any` keeps the body readable */
-  /** @type {any} */
-  const result = {
+  const result: any = {
     begin: '',
     end: '',
     residues: [],
@@ -36,24 +45,23 @@ export function appendResidues(data, sequence, options = {}) {
     replacements: {},
     all: [],
   };
-  /* eslint-enable jsdoc/reject-any-type */
 
   const STATE_BEGIN = 0;
   const STATE_MIDDLE = 1;
   const STATE_END = 2;
 
   let parenthesisLevel = 0;
-  let state = STATE_BEGIN; // as long as we don't have an uppercase followed by 2 lowercases
+  let state = STATE_BEGIN;
   for (let i = 0; i < sequence.length; i++) {
-    let currentChar = sequence.charAt(i);
-    let nextChar = i < sequence.length - 1 ? sequence.charAt(i + 1) : '';
-    let nextNextChar = i < sequence.length - 2 ? sequence.charAt(i + 2) : '';
+    const currentChar = sequence.charAt(i);
+    const nextChar = i < sequence.length - 1 ? sequence.charAt(i + 1) : '';
+    const nextNextChar = i < sequence.length - 2 ? sequence.charAt(i + 2) : '';
 
     if (
       state === STATE_BEGIN &&
-      currentChar.match(/[A-Z]/) &&
-      nextChar.match(/[a-z]/) &&
-      nextNextChar.match(/[a-z]/) &&
+      /[A-Z]/.test(currentChar) &&
+      /[a-z]/.test(nextChar) &&
+      /[a-z]/.test(nextNextChar) &&
       parenthesisLevel === 0
     ) {
       state = STATE_MIDDLE;
@@ -61,15 +69,15 @@ export function appendResidues(data, sequence, options = {}) {
 
     if (
       state === STATE_MIDDLE &&
-      !sequence.slice(Math.max(0, i)).match(/[A-Z][a-z]{2}/) &&
-      !currentChar.match(/[a-z]/) &&
+      !/[A-Z][a-z]{2}/.test(sequence.slice(Math.max(0, i))) &&
+      !/[a-z]/.test(currentChar) &&
       parenthesisLevel === 0
     ) {
       state = STATE_END;
     } else if (
-      currentChar.match(/[A-Z]/) &&
-      nextChar.match(/[a-z]/) &&
-      nextNextChar.match(/[a-z]/) &&
+      /[A-Z]/.test(currentChar) &&
+      /[a-z]/.test(nextChar) &&
+      /[a-z]/.test(nextNextChar) &&
       parenthesisLevel === 0
     ) {
       result.residues.push('');
@@ -77,14 +85,14 @@ export function appendResidues(data, sequence, options = {}) {
 
     switch (state) {
       case STATE_BEGIN:
-        result.begin = result.begin + currentChar;
+        result.begin = `${result.begin}${currentChar}`;
         break;
       case STATE_MIDDLE:
         result.residues[result.residues.length - 1] =
-          result.residues.at(-1) + currentChar;
+          `${result.residues.at(-1)}${currentChar}`;
         break;
       case STATE_END:
-        result.end = result.end + currentChar;
+        result.end = `${result.end}${currentChar}`;
         break;
       default:
     }
@@ -96,12 +104,11 @@ export function appendResidues(data, sequence, options = {}) {
     }
   }
 
-  // we process all the residues
-  let alternatives = {};
-  let replacements = {};
+  const alternatives: Record<string, { count: number }> = {};
+  const replacements: Record<string, Replacement> = {};
   for (let i = 0; i < result.residues.length; i++) {
-    let label = result.residues[i];
-    let residue = {
+    const label = result.residues[i];
+    const residue: any = {
       value: label,
       results: {
         begin: [],
@@ -113,7 +120,7 @@ export function appendResidues(data, sequence, options = {}) {
     };
     if (label.includes('(')) {
       getModifiedReplacement(label, residue, alternatives, replacements);
-    } else if (groupsObject[label] && groupsObject[label].oneLetter) {
+    } else if (groupsObject[label]?.oneLetter) {
       residue.label = groupsObject[label].oneLetter;
     } else {
       getUnknownReplacement(label, residue, replacements);
@@ -123,17 +130,13 @@ export function appendResidues(data, sequence, options = {}) {
   result.begin = removeStartEndParenthesis(result.begin);
   result.end = removeStartEndParenthesis(result.end);
   if (result.begin.length > 2) {
-    let label = options.kind === 'peptide' ? 'Nter' : "5'";
-    replacements[result.begin] = {
-      label,
-    };
+    const label = options.kind === 'peptide' ? 'Nter' : "5'";
+    replacements[result.begin] = { label };
     result.begin = label;
   }
   if (result.end.length > 2) {
-    let label = options.kind === 'peptide' ? 'Cter' : "3'";
-    replacements[result.end] = {
-      label,
-    };
+    const label = options.kind === 'peptide' ? 'Cter' : "3'";
+    replacements[result.end] = { label };
     result.end = label;
   }
 
@@ -142,7 +145,7 @@ export function appendResidues(data, sequence, options = {}) {
   result.alternatives = alternatives;
   result.replacements = replacements;
 
-  result.all = [result.begin].concat(result.residues, [result.end]);
+  result.all = [result.begin, ...result.residues, result.end];
 
   for (const entry of result.all) {
     entry.info = {
@@ -154,7 +157,17 @@ export function appendResidues(data, sequence, options = {}) {
   data.residues = result;
 }
 
-function getUnknownReplacement(unknownResidue, residue, replacements) {
+/**
+ * Assign an unknown residue a placeholder symbol and register it in `replacements`.
+ * @param unknownResidue - The raw residue code.
+ * @param residue - Residue object to mutate with label + replaced flag.
+ * @param replacements - Replacement map shared across the whole sequence.
+ */
+function getUnknownReplacement(
+  unknownResidue: string,
+  residue: any,
+  replacements: Record<string, Replacement>,
+): void {
   if (!replacements[unknownResidue]) {
     replacements[unknownResidue] = {
       label: SYMBOLS[currentSymbol] || '?',
@@ -166,24 +179,30 @@ function getUnknownReplacement(unknownResidue, residue, replacements) {
   residue.label = replacements[unknownResidue].label;
 }
 
+/**
+ * Assign a modified residue (e.g. `Ala(OMe)`) an alternative one-letter code,
+ * or fall back to an unknown replacement.
+ * @param modifiedResidue - The raw modified residue code.
+ * @param residue - Residue object to mutate with label + replaced flag.
+ * @param alternatives - Per-alternative letter counters shared across the sequence.
+ * @param replacements - Replacement map shared across the sequence.
+ */
 function getModifiedReplacement(
-  modifiedResidue,
-  residue,
-  alternatives,
-  replacements,
-) {
+  modifiedResidue: string,
+  residue: any,
+  alternatives: Record<string, { count: number }>,
+  replacements: Record<string, Replacement>,
+): void {
   if (!replacements[modifiedResidue]) {
-    let position = modifiedResidue.indexOf('(');
-    let residueCode = modifiedResidue.slice(0, Math.max(0, position));
-    let modification = removeStartEndParenthesis(
+    const position = modifiedResidue.indexOf('(');
+    const residueCode = modifiedResidue.slice(0, Math.max(0, position));
+    const modification = removeStartEndParenthesis(
       modifiedResidue.slice(Math.max(0, position)),
     );
 
-    if (
-      groupsObject[residueCode] &&
-      groupsObject[residueCode].alternativeOneLetter
-    ) {
-      let alternativeOneLetter = groupsObject[residueCode].alternativeOneLetter;
+    if (groupsObject[residueCode]?.alternativeOneLetter) {
+      const alternativeOneLetter =
+        groupsObject[residueCode].alternativeOneLetter;
 
       if (!alternatives[alternativeOneLetter]) {
         alternatives[alternativeOneLetter] = { count: 1 };
@@ -191,9 +210,7 @@ function getModifiedReplacement(
         alternatives[alternativeOneLetter].count++;
       }
       replacements[modifiedResidue] = {
-        label:
-          ALTERNATIVES[alternatives[alternativeOneLetter].count - 1] +
-          alternativeOneLetter,
+        label: `${ALTERNATIVES[alternatives[alternativeOneLetter].count - 1]}${alternativeOneLetter}`,
         residue: residueCode,
         modification,
       };
@@ -207,11 +224,11 @@ function getModifiedReplacement(
 
 /**
  * Strip a single pair of enclosing parentheses from a molecular formula.
- * @param {string} mf - Molecular formula that may be wrapped in parentheses.
- * @returns {string} The formula without its outer parentheses, if any.
+ * @param mf - Molecular formula that may be wrapped in parentheses.
+ * @returns The formula without its outer parentheses, if any.
  */
-function removeStartEndParenthesis(mf) {
-  if (mf[0] === '(' && mf.at(-1) === ')') {
+function removeStartEndParenthesis(mf: string): string {
+  if (mf.startsWith('(') && mf.at(-1) === ')') {
     return mf.slice(1, -1);
   }
   return mf;

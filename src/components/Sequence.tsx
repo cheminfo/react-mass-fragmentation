@@ -1,17 +1,22 @@
+import type { JSX } from 'react';
 import React from 'react';
 import { v4 as uuid } from 'uuid';
 
-/**
- * @typedef {import('../types.js').Residue} Residue
- * @typedef {import('../types.js').ResolvedOptions} ResolvedOptions
- */
+import type { Residue, ResolvedOptions } from '../types.js';
+
+interface SequenceProps {
+  /** Residues to display on this line. */
+  sequence: Residue[];
+  /** Rendering options. */
+  options: ResolvedOptions;
+}
 
 /**
  * Pick the text color for a residue based on its kind and replacement status.
- * @param {Residue} element - Residue being rendered.
- * @returns {string} A CSS color.
+ * @param element - Residue being rendered.
+ * @returns A CSS color.
  */
-function elementColor(element) {
+function elementColor(element: Residue): string {
   if (element.replaced) {
     return 'darkviolet';
   } else if (element.kind === 'begin' || element.kind === 'end') {
@@ -23,12 +28,12 @@ function elementColor(element) {
 
 /**
  * Render the residues of a single sequence line.
- * @param {object} props - Component props.
- * @param {Residue[]} props.sequence - Residues to display on this line.
- * @param {ResolvedOptions} props.options - Rendering options.
- * @returns {import('react').JSX.Element} The rendered residues.
+ * @param props - Component props.
+ * @param props.sequence - Residues to display on this line.
+ * @param props.options - Rendering options.
+ * @returns The rendered residues.
  */
-export function Sequence({ sequence, options }) {
+export function Sequence({ sequence, options }: SequenceProps): JSX.Element {
   const { leftRightBorders, spaceBetweenResidues } = options;
   return (
     <>

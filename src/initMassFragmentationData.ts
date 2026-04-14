@@ -1,22 +1,25 @@
 import { appendLines } from './appendLines.js';
 import { appendResidues } from './appendResidues.js';
 import { appendResults, sortResults } from './appendResults.js';
-
-/**
- * @typedef {import('./types.js').AnalysisResult} AnalysisResult
- * @typedef {import('./types.js').ResolvedOptions} ResolvedOptions
- * @typedef {import('./types.js').MassFragmentationData} MassFragmentationData
- */
+import type {
+  AnalysisResult,
+  MassFragmentationData,
+  ResolvedOptions,
+} from './types.js';
 
 /**
  * Build the full data model consumed by the React components: residues, grouped
  * results and pre-computed line layout.
- * @param {string} sequence - Peptide or nucleotide sequence.
- * @param {AnalysisResult[]} analysisResults - Raw analysis results.
- * @param {ResolvedOptions} options - Options with all defaults already applied.
- * @returns {MassFragmentationData} The data model ready to be rendered.
+ * @param sequence - Peptide or nucleotide sequence.
+ * @param analysisResults - Raw analysis results.
+ * @param options - Options with all defaults already applied.
+ * @returns The data model ready to be rendered.
  */
-export function initMassFragmentationData(sequence, analysisResults, options) {
+export function initMassFragmentationData(
+  sequence: string,
+  analysisResults: AnalysisResult[],
+  options: ResolvedOptions,
+): MassFragmentationData {
   const {
     parsing,
     merge,
@@ -26,7 +29,7 @@ export function initMassFragmentationData(sequence, analysisResults, options) {
     spaceBetweenResidues,
     spaceBetweenInternalLines,
   } = options;
-  const data = /** @type {MassFragmentationData} */ ({});
+  const data = {} as MassFragmentationData;
   appendResidues(data, sequence, parsing);
   appendResults(data, analysisResults, { merge, filter });
   sortResults(data);

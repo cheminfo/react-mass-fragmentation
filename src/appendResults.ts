@@ -1,36 +1,38 @@
-/* eslint-disable jsdoc/reject-any-type --
- * Analysis results are gradually augmented with fields (`position`, `from`,
- * `to`, `color`, `members`, ...) that do not exist on the raw input. Typing
- * every intermediate shape would require many interfaces for little value, so
- * we use `any` for the in-flight result objects and rely on the public
- * `Fragment` / `Internal` types at the boundaries.
- */
+/* eslint-disable @typescript-eslint/no-explicit-any -- results are gradually augmented with fields that don't exist on the raw input */
 
-/**
- * @typedef {import('./types.js').MassFragmentationData} MassFragmentationData
- * @typedef {import('./types.js').AnalysisResult} AnalysisResult
- * @typedef {import('./types.js').MergeOptions} MergeOptions
- * @typedef {import('./types.js').FilterOptions} FilterOptions
- */
+import type {
+  AnalysisResult,
+  FilterOptions,
+  Fragment,
+  Internal,
+  MassFragmentationData,
+  MergeOptions,
+} from './types.js';
+
+type MutableResult = AnalysisResult &
+  Record<string, any> & {
+    members?: unknown[];
+  };
 
 /**
  * Group results by fragment/internal and by position so that several results
  * sharing the same position appear stacked as `members`.
- * @param {MassFragmentationData} data - Data object mutated in place.
+ * @param data - Data object mutated in place.
  */
-export function sortResults(data) {
-  /** @type {any[]} */
-  const results = /** @type {any} */ (data.results);
-  const newResults = {
-    /** @type {any[]} */
+export function sortResults(data: MassFragmentationData): void {
+  const results = data.results as unknown as MutableResult[];
+  const newResults: {
+    internals: Internal[];
+    fragments: Fragment[];
+  } = {
     internals: [],
-    /** @type {any[]} */
     fragments: [],
   };
   while (results.length > 0) {
-    const result = results.pop();
+    const result = results.pop() as MutableResult;
     const resultType = 'position' in result ? 'fragments' : 'internals';
-    const index = newResults[resultType].findIndex((element) =>
+    const collection = newResults[resultType] as unknown as MutableResult[];
+    const index = collection.findIndex((element) =>
       'position' in result
         ? element.position === result.position &&
           (element.fromBegin === result.fromBegin ||
@@ -45,12 +47,14 @@ export function sortResults(data) {
         textColor: result.textColor,
       },
     ];
-    // eslint-disable-next-line no-unused-vars -- destructuring to strip fields
+
     const { type, charge, similarity, textColor, ...newResult } = result;
     if (index === -1) {
-      newResults[resultType].push(newResult);
+      collection.push(newResult as MutableResult);
     } else {
-      newResults[resultType][index].members.push(newResult.members[0]);
+      (collection[index].members as unknown[]).push(
+        (newResult.members as unknown[])[0],
+      );
     }
   }
   data.results = newResults;
@@ -59,34 +63,37 @@ export function sortResults(data) {
 /**
  * Transform raw analysis results into the structure consumed by the renderer,
  * colouring them, merging by charge (if requested) and filtering them.
- * @param {MassFragmentationData} data - Data object mutated in place.
- * @param {AnalysisResult[]} analysisResult - Raw analysis results.
- * @param {object} [options] - Merge and filter options.
- * @param {MergeOptions} [options.merge] - Merge options.
- * @param {FilterOptions} [options.filter] - Filter options.
+ * @param data - Data object mutated in place.
+ * @param analysisResult - Raw analysis results.
+ * @param options - Merge and filter options.
+ * @param options.merge - Merge options.
+ * @param options.filter - Filter options.
  */
-export function appendResults(data, analysisResult, options = {}) {
+export function appendResults(
+  data: MassFragmentationData,
+  analysisResult: AnalysisResult[],
+  options: { merge?: MergeOptions; filter?: FilterOptions } = {},
+): void {
   const numberResidues = data.residues.residues.length;
   const { merge = {}, filter = {} } = options;
 
-  /** @type {any[]} */
-  let results = structuredClone(analysisResult);
-  results = results.filter((result) => !result.type.match(/^-B\d$/));
+  let results = structuredClone(analysisResult) as MutableResult[];
+  results = results.filter((result) => !/^-B\d$/.test(result.type));
   for (const result of results) {
-    const parts = result.type.split(/:|(?=[a-z])/);
+    const parts: string[] = result.type.split(/:|(?=[a-z])/);
     if (parts.length === 2) {
       result.internal = true;
-      if (parts[1].match(/^[a-d][1-9]/)) {
+      if (/^[a-d][1-9]/.test(parts[1])) {
         [parts[0], parts[1]] = [parts[1], parts[0]];
       }
       result.to = getNumber(parts[0]);
       result.from = numberResidues - getNumber(parts[1]);
     } else {
-      if (parts[0].match(/^[a-d][1-9]/)) {
+      if (/^[a-d][1-9]/.test(parts[0])) {
         result.fromBegin = true;
         result.position = getNumber(parts[0]) - 1;
       }
-      if (parts[0].match(/^[w-z][1-9]/)) {
+      if (/^[w-z][1-9]/.test(parts[0])) {
         result.fromEnd = true;
         result.position = numberResidues - 1 - getNumber(parts[0]);
       }
@@ -112,8 +119,7 @@ export function appendResults(data, analysisResult, options = {}) {
   }
 
   if (merge.charge) {
-    /** @type {Record<string, any[]>} */
-    const unique = {};
+    const unique: Record<string, MutableResult[]> = {};
     for (const result of results) {
       if (!unique[result.type]) {
         unique[result.type] = [];
@@ -147,37 +153,41 @@ export function appendResults(data, analysisResult, options = {}) {
 
   results = filterResults(results, filter);
 
-  results.sort((a, b) => a.length - b.length);
-  data.results = /** @type {any} */ (results);
+  results.sort((a, b) => (a as any).length - (b as any).length);
+  data.results = results as unknown as MassFragmentationData['results'];
 }
 
 /**
  * Extract the numeric suffix from a fragment type (e.g. `b12` -> `12`).
- * @param {string} text - Fragment type label.
- * @returns {number} Numeric suffix parsed from the label.
+ * @param text - Fragment type label.
+ * @returns Numeric suffix parsed from the label.
  */
-function getNumber(text) {
+function getNumber(text: string): number {
   return Number(text.replace(/^.(?<number>\d+).*$/, '$<number>'));
 }
 
 /**
  * Filter out results based on similarity, quantity and whether internals should be shown.
- * @param {any[]} results - Results to filter.
- * @param {FilterOptions} [filter] - Filter options.
- * @returns {any[]} The filtered results.
+ * @param results - Results to filter.
+ * @param filter - Filter options.
+ * @returns The filtered results.
  */
-function filterResults(results, filter) {
+function filterResults(
+  results: MutableResult[],
+  filter?: FilterOptions,
+): MutableResult[] {
   if (!filter) return results;
-  let {
+  const {
     minRelativeQuantity = 0,
     minSimilarity = 0,
-    minQuantity = 0,
     showInternals = true,
   } = filter;
+  let { minQuantity = 0 } = filter;
 
   if (minRelativeQuantity) {
     minQuantity =
-      Math.max(...results.map((entry) => entry.quantity)) * minRelativeQuantity;
+      Math.max(...results.map((entry) => entry.quantity ?? 0)) *
+      minRelativeQuantity;
   }
 
   if (minSimilarity) {

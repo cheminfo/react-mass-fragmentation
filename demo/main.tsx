@@ -1,12 +1,16 @@
 import { createRoot } from 'react-dom/client';
 import { v4 as uuid } from 'uuid';
 
-import Fragmentation from './Fragmentation';
-import { bigNucleotide } from './data/bigNucleotide';
-import { nucleotide } from './data/nucleotide';
-import { peptide } from './data/peptide';
+import Fragmentation from './Fragmentation.js';
+import { bigNucleotide } from './data/bigNucleotide.js';
+import { nucleotide } from './data/nucleotide.js';
+import { peptide } from './data/peptide.js';
 
-const root = createRoot(document.querySelector('#root'));
+const container = document.querySelector('#root');
+if (!container) {
+  throw new Error('#root element not found');
+}
+const root = createRoot(container);
 root.render(
   <>
     <h2>Peptide</h2>

@@ -1,3 +1,5 @@
+import type { SequenceSVGOptions } from '../../src/types.js';
+
 const info = [
   {
     quantity: 0.05,
@@ -1482,7 +1484,7 @@ const info = [
 
 const analysisResults = info.filter((entry) => !entry.type.includes('B'));
 
-let options = {
+const options: SequenceSVGOptions = {
   width: 250,
   labelSize: 8,
   parsing: {
@@ -1493,7 +1495,7 @@ let options = {
   },
 };
 
-let sequence = 'ACGGCTT(C8H14N2O)AGG';
+const sequence = 'ACGGCTT(C8H14N2O)AGG';
 
 export const bigNucleotide = {
   sequence,

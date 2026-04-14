@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest';
 
-import { sequenceSVG } from '../sequenceSVG.tsx';
+import { sequenceSVG } from '../sequenceSVG.js';
+import type { SequenceSVGOptions } from '../types.js';
 
 test('render: Molecule', () => {
   const sequence =
@@ -27,7 +28,7 @@ test('render: Molecule', () => {
     { type: 'c38', similarity: 0.5044, charge: 2 },
   ];
 
-  const options = {
+  const options: SequenceSVGOptions = {
     width: 700,
     leftRightBorders: 50,
     spaceBetweenResidues: 30,

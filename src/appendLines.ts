@@ -1,70 +1,32 @@
-/**
- * @typedef {import('./types.js').MassFragmentationData} MassFragmentationData
- * @typedef {import('./types.js').LineData} LineData
- * @typedef {import('./types.js').Fragment} Fragment
- * @typedef {import('./types.js').Internal} Internal
- */
+import type {
+  Fragment,
+  Internal,
+  Legend,
+  LineData,
+  MassFragmentationData,
+} from './types.js';
 
-/**
- * Compute the maximum number of members across all terminal fragments on a line.
- * @param {Fragment[]} fragments - Fragments of a sequence line.
- * @returns {number} The size of the largest `members` array.
- */
-function maxFragmentsOnSequenceLine(fragments) {
-  let maxFragments = 0;
-  for (const fragment of fragments) {
-    if (fragment.members.length > maxFragments) {
-      maxFragments = fragment.members.length;
-    }
-  }
-  return maxFragments;
-}
-
-/**
- * Sum the number of members across all internal fragments.
- * @param {Internal[]} internals - Internal fragments of a sequence line.
- * @returns {number} The total number of members.
- */
-function totalInternals(internals) {
-  let total = 0;
-  for (const internal of internals) {
-    total += internal.members.length;
-  }
-  return total;
-}
-
-/**
- * Convert absolute residue positions stored on each line to positions
- * relative to the start of that line.
- * @param {LineData[]} lines - Lines whose fragments and internals should be remapped.
- * @returns {LineData[]} The same lines, mutated in place, returned for chaining.
- */
-function updatePositionOnLine(lines) {
-  for (let i = 0; i < lines.length; i++) {
-    for (const fragment of lines[i].fragments) {
-      fragment.position = fragment.position - lines[i].from;
-    }
-    for (const internal of lines[i].internals) {
-      internal.from =
-        internal.from < lines[i].from ? -1 : internal.from - lines[i].from;
-      internal.to =
-        internal.to >= lines[i].to ? Infinity : internal.to - lines[i].from;
-    }
-  }
-  return lines;
+interface AppendLinesOptions {
+  /** Total SVG width. */
+  width: number;
+  /** Left/right border width. */
+  leftRightBorders: number;
+  /** Horizontal space between residues. */
+  spaceBetweenResidues: number;
+  /** Vertical space between internal lines. */
+  spaceBetweenInternalLines: number;
 }
 
 /**
  * Split residues and results into lines that fit inside the available width
  * and compute per-line heights.
- * @param {MassFragmentationData} data - Data object mutated in place.
- * @param {object} options - Layout options.
- * @param {number} options.width - Total SVG width.
- * @param {number} options.leftRightBorders - Left/right border width.
- * @param {number} options.spaceBetweenResidues - Horizontal space between residues.
- * @param {number} options.spaceBetweenInternalLines - Vertical space between internal lines.
+ * @param data - Data object mutated in place.
+ * @param options - Layout options.
  */
-export function appendLines(data, options) {
+export function appendLines(
+  data: MassFragmentationData,
+  options: AppendLinesOptions,
+): void {
   const {
     width,
     leftRightBorders,
@@ -74,10 +36,9 @@ export function appendLines(data, options) {
   const usefulWidth = width - 2 * leftRightBorders;
   const nbElementByLine = Math.trunc(usefulWidth / spaceBetweenResidues);
   const nbLine = Math.ceil(data.residues.all.length / nbElementByLine);
-  /** @type {LineData[]} */
-  const lines = [];
+  const lines: LineData[] = [];
   for (let i = 0; i < nbLine; i++) {
-    const line = {
+    const line: LineData = {
       from: i * nbElementByLine,
       to: (i + 1) * nbElementByLine,
       residues: structuredClone(
@@ -97,6 +58,10 @@ export function appendLines(data, options) {
             internal.to >= i * nbElementByLine,
         ),
       ),
+      heightBelow: 0,
+      heightAbove: 0,
+      totalheightAbove: 0,
+      y: 0,
     };
     lines.push(line);
   }
@@ -120,8 +85,7 @@ export function appendLines(data, options) {
 
   if (Object.keys(data.residues.replacements).length > 0) {
     const replacementsNumber = Object.keys(data.residues.replacements).length;
-    /** @type {import('./types.js').Legend} */
-    const legend = {
+    const legend: Legend = {
       y: data.height + spaceBetweenInternalLines,
       labels: [],
     };
@@ -135,4 +99,52 @@ export function appendLines(data, options) {
   }
 
   data.lines = lines;
+}
+
+/**
+ * Compute the maximum number of members across all terminal fragments on a line.
+ * @param fragments - Fragments of a sequence line.
+ * @returns The size of the largest `members` array.
+ */
+function maxFragmentsOnSequenceLine(fragments: Fragment[]): number {
+  let maxFragments = 0;
+  for (const fragment of fragments) {
+    if (fragment.members.length > maxFragments) {
+      maxFragments = fragment.members.length;
+    }
+  }
+  return maxFragments;
+}
+
+/**
+ * Sum the number of members across all internal fragments.
+ * @param internals - Internal fragments of a sequence line.
+ * @returns The total number of members.
+ */
+function totalInternals(internals: Internal[]): number {
+  let total = 0;
+  for (const internal of internals) {
+    total += internal.members.length;
+  }
+  return total;
+}
+
+/**
+ * Convert absolute residue positions stored on each line to positions
+ * relative to the start of that line.
+ * @param lines - Lines whose fragments and internals should be remapped.
+ * @returns The same lines, mutated in place, returned for chaining.
+ */
+function updatePositionOnLine(lines: LineData[]): LineData[] {
+  for (const line of lines) {
+    for (const fragment of line.fragments) {
+      fragment.position = fragment.position - line.from;
+    }
+    for (const internal of line.internals) {
+      internal.from =
+        internal.from < line.from ? -1 : internal.from - line.from;
+      internal.to = internal.to >= line.to ? Infinity : internal.to - line.from;
+    }
+  }
+  return lines;
 }

@@ -1,22 +1,36 @@
+import type { JSX } from 'react';
 import React from 'react';
 import { v4 as uuid } from 'uuid';
 
+import type {
+  Internal as InternalFragment,
+  ResolvedOptions,
+} from '../types.js';
+
 import { SequenceLabel } from './SequenceLabel.js';
 
-/**
- * @typedef {import('../types.js').Internal} InternalFragment
- * @typedef {import('../types.js').ResolvedOptions} ResolvedOptions
- */
+interface InternalProps {
+  /** Internal fragment to render. */
+  internal: InternalFragment;
+  /** Vertical index used to stack multiple internals. */
+  indexInternal: number;
+  /** Rendering options. */
+  options: ResolvedOptions;
+}
 
 /**
  * Render a single internal fragment row (one line plus its labels).
- * @param {object} props - Component props.
- * @param {InternalFragment} props.internal - Internal fragment to render.
- * @param {number} props.indexInternal - Vertical index used to stack multiple internals.
- * @param {ResolvedOptions} props.options - Rendering options.
- * @returns {import('react').JSX.Element} The SVG group for this internal fragment.
+ * @param props - Component props.
+ * @param props.internal - Internal fragment to render.
+ * @param props.indexInternal - Vertical index used to stack multiple internals.
+ * @param props.options - Rendering options.
+ * @returns The SVG group for this internal fragment.
  */
-export function Internal({ internal, indexInternal, options }) {
+export function Internal({
+  internal,
+  indexInternal,
+  options,
+}: InternalProps): JSX.Element {
   const {
     leftRightBorders,
     spaceBetweenResidues,
@@ -26,7 +40,7 @@ export function Internal({ internal, indexInternal, options }) {
     width,
   } = options;
 
-  const fontSize = (2 * Number(labelSize)) / 3;
+  const fontSize = (2 * labelSize) / 3;
   const xStart =
     internal.from === -1
       ? 0

@@ -1,25 +1,30 @@
+import type { JSX } from 'react';
 import { v4 as uuid } from 'uuid';
+
+import type { Fragment, ResolvedOptions } from '../types.js';
 
 import { SequenceLabel } from './SequenceLabel.js';
 
-/**
- * @typedef {import('../types.js').Fragment} Fragment
- * @typedef {import('../types.js').ResolvedOptions} ResolvedOptions
- */
+interface SequenceFragmentProps {
+  /** Fragments to display. */
+  fragments: Fragment[];
+  /** Rendering options. */
+  options: ResolvedOptions;
+}
 
 /**
  * Render the terminal fragments (starting from begin or end) for a sequence line.
- * @param {object} props - Component props.
- * @param {Fragment[]} props.fragments - Fragments to display.
- * @param {ResolvedOptions} props.options - Rendering options.
- * @returns {import('react').JSX.Element} The rendered fragment markers and labels.
+ * @param props - Component props.
+ * @param props.fragments - Fragments to display.
+ * @param props.options - Rendering options.
+ * @returns The rendered fragment markers and labels.
  */
-export function SequenceFragment({ fragments, options }) {
-  const {
-    spaceBetweenResidues = 30,
-    spaceBetweenInternalLines = 12,
-    strokeWidth = 2,
-  } = options;
+export function SequenceFragment({
+  fragments,
+  options,
+}: SequenceFragmentProps): JSX.Element {
+  const { spaceBetweenResidues, spaceBetweenInternalLines, strokeWidth } =
+    options;
   return (
     <>
       {fragments.map((fragment) => (
