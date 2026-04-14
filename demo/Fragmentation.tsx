@@ -1,5 +1,4 @@
 import type { JSX } from 'react';
-import { v4 as uuid } from 'uuid';
 
 import { MassFragmentation } from '../src/components/MassFragmentation.js';
 import type { AnalysisResult, SequenceSVGOptions } from '../src/types.js';
@@ -32,13 +31,11 @@ export default function Fragmentation({
         border: '1px solid red',
         overflow: 'clip',
       }}
-      key={uuid()}
     >
       <MassFragmentation
         sequence={sequence}
         analysisResults={analysisResults}
         options={options}
-        key={uuid()}
       />
     </div>
   );

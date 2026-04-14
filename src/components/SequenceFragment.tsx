@@ -1,5 +1,4 @@
 import type { JSX } from 'react';
-import { v4 as uuid } from 'uuid';
 
 import type { Fragment, ResolvedOptions } from '../types.js';
 
@@ -29,8 +28,8 @@ export function SequenceFragment({
     <>
       {fragments.map((fragment) => (
         <g
+          key={`${fragment.fromBegin ? 'b' : 'e'}-${fragment.position}`}
           transform={`translate(${(fragment.fromBegin ? -1 : 1) * strokeWidth + fragment.position * spaceBetweenResidues} 0)`}
-          key={uuid()}
         >
           <line y2={-8} stroke={fragment.color} strokeWidth={strokeWidth} />
           <line
@@ -40,10 +39,10 @@ export function SequenceFragment({
             stroke={fragment.color}
             strokeWidth={strokeWidth}
           />
-          {fragment.members.map((member, index) => (
+          {fragment.members.map((member, memberIndex) => (
             <g
-              transform={`translate(${fragment.fromBegin ? 0 : 8} ${fragment.fromBegin ? 2 + (index + 1) * spaceBetweenInternalLines : -15 - index * spaceBetweenInternalLines})`}
-              key={uuid()}
+              key={`${member.type}-${member.charge}`}
+              transform={`translate(${fragment.fromBegin ? 0 : 8} ${fragment.fromBegin ? 2 + (memberIndex + 1) * spaceBetweenInternalLines : -15 - memberIndex * spaceBetweenInternalLines})`}
             >
               <SequenceLabel
                 label={member.type}
@@ -51,7 +50,6 @@ export function SequenceFragment({
                 similarity={Math.trunc(member.similarity * 100)}
                 textColor={member.textColor}
                 options={options}
-                key={uuid()}
               />
             </g>
           ))}

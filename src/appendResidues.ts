@@ -173,8 +173,8 @@ function getUnknownReplacement(
       label: SYMBOLS[currentSymbol] || '?',
       id: unknownResidue,
     };
+    currentSymbol++;
   }
-  currentSymbol++;
   residue.replaced = true;
   residue.label = replacements[unknownResidue].label;
 }

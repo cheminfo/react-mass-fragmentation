@@ -33,8 +33,7 @@
     "chemical-groups": "^2.2.3",
     "mf-utilities": "^3.5.4",
     "nucleotide": "^3.2.14",
-    "peptide": "^2.3.14",
-    "uuid": "^13.0.0"
+    "peptide": "^2.3.14"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",

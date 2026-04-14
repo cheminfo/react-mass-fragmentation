@@ -144,7 +144,7 @@ export function appendResults(
       result.textColor = 'black';
     } else if (result.similarity > 0.9) {
       result.textColor = '#333';
-    } else if (result.similariy > 0.8) {
+    } else if (result.similarity > 0.8) {
       result.textColor = '#666';
     } else {
       result.textColor = '#999';
@@ -153,7 +153,6 @@ export function appendResults(
 
   results = filterResults(results, filter);
 
-  results.sort((a, b) => (a as any).length - (b as any).length);
   data.results = results as unknown as MassFragmentationData['results'];
 }
 

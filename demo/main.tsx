@@ -1,5 +1,4 @@
 import { createRoot } from 'react-dom/client';
-import { v4 as uuid } from 'uuid';
 
 import Fragmentation from './Fragmentation.js';
 import { bigNucleotide } from './data/bigNucleotide.js';
@@ -18,21 +17,18 @@ root.render(
       sequence={peptide.sequence}
       analysisResults={peptide.analysisResults}
       options={peptide.options}
-      key={uuid()}
     />
     <h2>Nucléotide</h2>
     <Fragmentation
       sequence={nucleotide.sequence}
       analysisResults={nucleotide.analysisResults}
       options={nucleotide.options}
-      key={uuid()}
     />
     <h2>Big Nucleotide</h2>
     <Fragmentation
       sequence={bigNucleotide.sequence}
       analysisResults={bigNucleotide.analysisResults}
       options={bigNucleotide.options}
-      key={uuid()}
     />
   </>,
 );

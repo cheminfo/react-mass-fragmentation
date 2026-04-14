@@ -1,6 +1,4 @@
 import type { JSX } from 'react';
-import React from 'react';
-import { v4 as uuid } from 'uuid';
 
 import type {
   Internal as InternalFragment,
@@ -53,33 +51,28 @@ export function Internal({
   return (
     <>
       {internal.members.map((member, memberIndex) => (
-        <React.Fragment key={uuid()}>
+        <g
+          key={`${member.type}-${member.charge}`}
+          transform={`translate(${xStart} ${yLine - memberIndex * spaceBetweenInternalLines})`}
+        >
+          <line
+            x2={internal.to === Infinity ? width : xEnd - xStart}
+            strokeLinecap="round"
+            strokeWidth={strokeWidth}
+            stroke={internal.color}
+          />
           <g
-            transform={`translate(${xStart} ${yLine - memberIndex * spaceBetweenInternalLines})`}
-            key={uuid()}
+            transform={`translate(${(xEnd - xStart + (member.type.length * fontSize * 2) / 3) / 2} ${-strokeWidth - 1})`}
           >
-            <line
-              x2={internal.to === Infinity ? width : xEnd - xStart}
-              strokeLinecap="round"
-              strokeWidth={strokeWidth}
-              stroke={internal.color}
-              key={uuid()}
+            <SequenceLabel
+              label={member.type}
+              charge={member.charge}
+              similarity={Math.trunc(member.similarity * 100)}
+              textColor={member.textColor}
+              options={options}
             />
-            <g
-              transform={`translate(${(xEnd - xStart + (member.type.length * fontSize * 2) / 3) / 2} ${-strokeWidth - 1})`}
-              key={uuid()}
-            >
-              <SequenceLabel
-                label={member.type}
-                charge={member.charge}
-                similarity={Math.trunc(member.similarity * 100)}
-                textColor={member.textColor}
-                options={options}
-                key={uuid()}
-              />
-            </g>
           </g>
-        </React.Fragment>
+        </g>
       ))}
     </>
   );

@@ -1,6 +1,5 @@
 import type { JSX } from 'react';
 import React from 'react';
-import { v4 as uuid } from 'uuid';
 
 import { initMassFragmentationData } from '../initMassFragmentationData.js';
 import type {
@@ -68,34 +67,26 @@ export function MassFragmentation({
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox={`0 0 ${width} ${data.height}`}
-      key={uuid()}
     >
       {data.lines.map((line) => (
-        <React.Fragment key={uuid()}>
+        <React.Fragment key={line.from}>
           <g
             transform={`translate(0 ${line.y})`}
             fontFamily={labelFontFamily}
             fontWeight="bold"
-            key={uuid()}
           >
-            <g fontSize={12} key={uuid()}>
-              <Sequence
-                sequence={line.residues}
-                options={realOptions}
-                key={uuid()}
-              />
+            <g fontSize={12}>
+              <Sequence sequence={line.residues} options={realOptions} />
             </g>
             <g
               fontSize={labelSize}
               strokeWidth={strokeWidth}
               strokeLinecap="round"
               transform={`translate(${leftRightBorders + 1.5 * spaceBetweenResidues})`}
-              key={uuid()}
             >
               <SequenceFragment
                 fragments={line.fragments}
                 options={realOptions}
-                key={uuid()}
               />
             </g>
             <g
@@ -106,12 +97,10 @@ export function MassFragmentation({
                   ) + 1
                 ) * spaceBetweenInternalLines
               })`}
-              key={uuid()}
             >
               <SequenceInternals
                 internals={line.internals}
                 options={realOptions}
-                key={uuid()}
               />
             </g>
           </g>
@@ -123,15 +112,13 @@ export function MassFragmentation({
           {data.legend.labels.map((label, index) => (
             <g
               transform={`translate(0 ${index * spaceBetweenInternalLines})`}
-              key={uuid()}
+              key={label}
             >
-              <Legend legend={label} options={realOptions} key={uuid()} />
+              <Legend legend={label} options={realOptions} />
             </g>
           ))}
         </g>
-      ) : (
-        <g />
-      )}
+      ) : null}
     </svg>
   );
 }

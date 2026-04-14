@@ -1,6 +1,4 @@
 import type { JSX } from 'react';
-import React from 'react';
-import { v4 as uuid } from 'uuid';
 
 import type { Residue, ResolvedOptions } from '../types.js';
 
@@ -38,15 +36,15 @@ export function Sequence({ sequence, options }: SequenceProps): JSX.Element {
   return (
     <>
       {sequence.map((element, index) => (
-        <React.Fragment key={uuid()}>
-          <text
-            fill={elementColor(element)}
-            x={leftRightBorders + index * spaceBetweenResidues}
-            textAnchor="middle"
-          >
-            {element.label}
-          </text>
-        </React.Fragment>
+        <text
+          // eslint-disable-next-line react/no-array-index-key -- residue labels can repeat, so position is the natural identifier
+          key={index}
+          fill={elementColor(element)}
+          x={leftRightBorders + index * spaceBetweenResidues}
+          textAnchor="middle"
+        >
+          {element.label}
+        </text>
       ))}
     </>
   );

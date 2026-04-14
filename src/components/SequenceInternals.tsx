@@ -1,5 +1,4 @@
 import type { JSX } from 'react';
-import { v4 as uuid } from 'uuid';
 
 import type {
   Internal as InternalFragment,
@@ -44,10 +43,10 @@ export function SequenceInternals({
     <>
       {internalElements.map(({ internal, indexInternal }) => (
         <Internal
+          key={`${internal.from}-${internal.to}`}
           internal={internal}
           indexInternal={indexInternal}
           options={options}
-          key={uuid()}
         />
       ))}
     </>
